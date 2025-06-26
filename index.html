@@ -1,0 +1,515 @@
+<!-- Notification Overlay -->
+<div id="notification-overlay" class="notification-overlay">
+    <div class="text-center chat-bubble bg-white text-black p-6 rounded-lg max-w-md">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+            <path d="M20 20 H80 A20 20 0 0 1 80 80 H40 L20 60 V20 Z" fill="#4CAF50"/>
+            <path class="checkmark-circle" d="M35 50 L45 60 L65 40" stroke="#fff" stroke-width="4"/>
+        </svg>
+        <p class="text-xl mt-4" id="notification-message"></p>
+        <button onclick="closeNotification()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Close</button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div id="main-content" class="w-full hidden">
+    <header class="text-center py-10">
+        <h1 class="text-5xl font-bold animate-pulse">FXXXGIFTCARDZ</h1>
+        <p class="text-lg mt-2">Claim Your Free Gift Cards Instantly!</p>
+        <button id="logout-btn" class="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Logout</button>
+    </header>
+
+    <main class="w-full max-w-6xl mx-auto p-6">
+        <!-- Gift Card Generator Section -->
+        <section class="mb-10">
+            <h2 class="text-3xl font-semibold mb-6 text-center fade-in">Gift Card Categories</h2>
+            <div id="loading-spinner" class="spinner mx-auto mb-4 hidden"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Flipkart Card -->
+                <div class="card bg-orange-500 rounded-lg shadow-lg p-6 text-center glow-animation">
+                    <div class="logo-placeholder">Flipkart Logo</div>
+                    <h2 class="text-2xl font-semibold mb-4">Flipkart Gift Card</h2>
+                    <div class="bg-white text-black p-4 rounded-md mb-4">
+                        <p class="text-lg">Code: <span id="flipkart-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p class="text-lg">PIN: <span id="flipkart-pin">XXXX</span></p>
+                    </div>
+                    <div class="registration-form">
+                        <input type="text" id="flipkart-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
+                        <input type="tel" id="flipkart-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
+                        <input type="email" id="flipkart-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
+                        <input type="text" id="flipkart-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
+                        <button onclick="generateCard('flipkart')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    </div>
+                </div>
+
+                <!-- Amazon Card -->
+                <div class="card bg-yellow-500 rounded-lg shadow-lg p-6 text-center glow-animation">
+                    <div class="logo-placeholder">Amazon Logo</div>
+                    <h2 class="text-2xl font-semibold mb-4">Amazon Gift Card</h2>
+                    <div class="bg-white text-black p-4 rounded-md mb-4">
+                        <p class="text-lg">Code: <span id="amazon-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p class="text-lg">PIN: <span id="amazon-pin">XXXX</span></p>
+                    </div>
+                    <div class="registration-form">
+                        <input type="text" id="amazon-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
+                        <input type="tel" id="amazon-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
+                        <input type="email" id="amazon-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
+                        <input type="text" id="amazon-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
+                        <button onclick="generateCard('amazon')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    </div>
+                </div>
+
+                <!-- Swiggy Card -->
+                <div class="card bg-orange-600 rounded-lg shadow-lg p-6 text-center glow-animation">
+                    <div class="logo-placeholder">Swiggy Logo</div>
+                    <h2 class="text-2xl font-semibold mb-4">Swiggy Gift Card</h2>
+                    <div class="bg-white text-black p-4 rounded-md mb-4">
+                        <p class="text-lg">Code: <span id="swiggy-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p class="text-lg">PIN: <span id="swiggy-pin">XXXX</span></p>
+                    </div>
+                    <div class="registration-form">
+                        <input type="text" id="swiggy-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
+                        <input type="tel" id="swiggy-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
+                        <input type="email" id="swiggy-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
+                        <input type="text" id="swiggy-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
+                        <button onclick="generateCard('swiggy')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    </div>
+                </div>
+
+                <!-- Zomato Card -->
+                <div class="card bg-red-500 rounded-lg shadow-lg p-6 text-center glow-animation">
+                    <div class="logo-placeholder">Zomato Logo</div>
+                    <h2 class="text-2xl font-semibold mb-4">Zomato Gift Card</h2>
+                    <div class="bg-white text-black p-4 rounded-md mb-4">
+                        <p class="text-lg">Code: <span id="zomato-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p class="text-lg">PIN: <span id="zomato-pin">XXXX</span></p>
+                    </div>
+                    <div class="registration-form">
+                        <input type="text" id="zomato-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
+                        <input type="tel" id="zomato-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
+                        <input type="email" id="zomato-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
+                        <input type="text" id="zomato-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
+                        <button onclick="generateCard('zomato')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    </div>
+                </div>
+
+                <!-- Domino's Card -->
+                <div class="card bg-blue-600 rounded-lg shadow-lg p-6 text-center glow-animation">
+                    <div class="logo-placeholder">Domino's Logo</div>
+                    <h2 class="text-2xl font-semibold mb-4">Domino's Gift Card</h2>
+                    <div class="bg-white text-black p-4 rounded-md mb-4">
+                        <p class="text-lg">Code: <span id="dominos-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p class="text-lg">PIN: <span id="dominos-pin">XXXX</span></p>
+                    </div>
+                    <div class="registration-form">
+                        <input type="text" id="dominos-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
+                        <input type="tel" id="dominos-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
+                        <input type="email" id="dominos-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
+                        <input type="text" id="dominos-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
+                        <button onclick="generateCard('dominos')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent History Section -->
+        <section class="w-full bg-gray-800 rounded-lg p-6 mb-10 fade-in">
+            <h2 class="text-2xl font-semibold mb-4">Recent Transaction History</h2>
+            <div id="transaction-history" class="text-black"></div>
+        </section>
+
+        <!-- Transaction Checker Section -->
+        <section class="w-full bg-gray-800 rounded-lg p-6 fade-in">
+            <h2 class="text-2xl font-semibold mb-4">Transaction Checker</h2>
+            <div class="flex flex-col md:flex-row gap-4">
+                <input type="text" id="transaction-id-input" placeholder="Enter Transaction ID" class="p-2 rounded text-black flex-1">
+                <button onclick="checkTransaction()" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Check Status</button>
+            </div>
+            <div id="transaction-status" class="mt-4 text-lg"></div>
+        </section>
+    </main>
+
+    <!-- Success Animation Overlay -->
+    <div id="success-overlay" class="success-overlay">
+        <div class="text-center">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#4CAF50" stroke-width="4"/>
+                <path class="checkmark-circle" d="M30 50 L45 65 L70 35"/>
+            </svg>
+            <p class="text-2xl mt-4 success-message">Gift Card Generated Successfully!</p>
+        </div>
+    </div>
+
+    <!-- Email Sent Confirmation Overlay -->
+    <div id="email-overlay" class="email-overlay">
+        <div class="text-center">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#4CAF50" stroke-width="4"/>
+                <path class="checkmark-circle" d="M30 50 L45 65 L70 35"/>
+            </svg>
+            <p class="text-2xl mt-4 success-message">Gift Card Sent to Email!</p>
+        </div>
+    </div>
+
+    <!-- Message Sent Confirmation Overlay -->
+    <div id="message-overlay" class="message-overlay">
+        <div class="text-center chat-bubble">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <path d="M20 20 H80 A20 20 0 0 1 80 80 H40 L20 60 V20 Z" fill="#4CAF50"/>
+                <path class="checkmark-circle" d="M35 50 L45 60 L65 40" stroke="#fff" stroke-width="4"/>
+            </svg>
+            <p class="text-2xl mt-4 success-message">Gift Card Sent to Username!</p>
+        </div>
+    </div>
+
+    <footer class="py-6 text-center">
+        <p class="text-sm">© 2025 FXXXGIFTCARDZ. All rights reserved. (Fictional website for demonstration only)</p>
+        <div class="mt-2">
+            <a href="#" class="text-blue-400 hover:underline mx-2">Terms & Conditions</a>
+            <a href="#" class="text-blue-400 hover:underline mx-2">Privacy Policy</a>
+            <a href="#" class="text-blue-400 hover:underline mx-2">Contact Us</a>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // User Management
+    let currentUser = null;
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+    const messages = JSON.parse(sessionStorage.getItem('messages')) || [];
+    const giftCards = JSON.parse(localStorage.getItem('giftCards')) || [];
+    const fromEmail = 'dasritam288@gmail.com';
+
+    function showAuthModal(mode) {
+        const modal = document.getElementById('auth-modal');
+        const title = document.getElementById('auth-title');
+        const submitBtn = document.getElementById('auth-submit');
+        const toggleBtn = document.getElementById('toggle-auth');
+        const error = document.getElementById('auth-error');
+        error.classList.add('hidden');
+        title.textContent = mode === 'login' ? 'Login' : 'Sign Up';
+        submitBtn.textContent = mode === 'login' ? 'Login' : 'Sign Up';
+        toggleBtn.textContent = mode === 'login' ? 'Sign Up' : 'Login';
+        modal.classList.remove('hidden');
+    }
+
+    function hideAuthModal() {
+        document.getElementById('auth-modal').classList.add('hidden');
+        document.getElementById('auth-username').value = '';
+        document.getElementById('auth-password').value = '';
+        document.getElementById('auth-error').classList.add('hidden');
+    }
+
+    function showMainContent() {
+        document.getElementById('main-content').classList.remove('hidden');
+        checkNotifications();
+    }
+
+    document.getElementById('auth-submit').addEventListener('click', () => {
+        const username = document.getElementById('auth-username').value.trim();
+        const password = document.getElementById('auth-password').value.trim();
+        const error = document.getElementById('auth-error');
+        const mode = document.getElementById('auth-title').textContent.toLowerCase();
+
+        if (!username || !password) {
+            error.textContent = 'Please fill in all fields.';
+            error.classList.remove('hidden');
+            return;
+        }
+
+        if (mode === 'login') {
+            if (users[username] && users[username].password === password) {
+                currentUser = username;
+                hideAuthModal();
+                showMainContent();
+                loadTransactionHistory();
+            } else {
+                error.textContent = 'Invalid username or password.';
+                error.classList.remove('hidden');
+            }
+        } else {
+            if (users[username]) {
+                error.textContent = 'Username already exists.';
+                error.classList.remove('hidden');
+            } else {
+                users[username] = { password, transactions: [] };
+                localStorage.setItem('users', JSON.stringify(users));
+                currentUser = username;
+                hideAuthModal();
+                showMainContent();
+                loadTransactionHistory();
+            }
+        }
+    });
+
+    document.getElementById('toggle-auth').addEventListener('click', () => {
+        const mode = document.getElementById('auth-title').textContent.toLowerCase();
+        showAuthModal(mode === 'login' ? 'signup' : 'login');
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        currentUser = null;
+        document.getElementById('main-content').classList.add('hidden');
+        showAuthModal('login');
+    });
+
+    // Gift Card Generation
+    function generateRandomCode() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = '';
+        for (let i = 0; i < 16; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+            if (i === 3 || i === 7 || i === 11) code += '-';
+        }
+        return code;
+    }
+
+    function generateRandomPin() {
+        return Math.floor(1000 + Math.random() * 9000).toString();
+    }
+
+    function generateTransactionId() {
+        return 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    }
+
+    function showSuccessAnimation() {
+        const overlay = document.getElementById('success-overlay');
+        overlay.classList.add('active');
+        setTimeout(() => {
+            overlay.classList.remove('active');
+        }, 2000);
+    }
+
+    function showEmailConfirmation() {
+        const overlay = document.getElementById('email-overlay');
+        overlay.classList.add('active');
+        setTimeout(() => {
+            overlay.classList.remove('active');
+        }, 2000);
+    }
+
+    function showMessageConfirmation() {
+        const overlay = document.getElementById('message-overlay');
+        overlay.classList.add('active');
+        setTimeout(() => {
+            overlay.classList.remove('active');
+        }, 2000);
+    }
+
+    function showNotification(message) {
+        const overlay = document.getElementById('notification-overlay');
+        const messageElement = document.getElementById('notification-message');
+        messageElement.innerHTML = message;
+        overlay.classList.add('active');
+    }
+
+    function closeNotification() {
+        const overlay = document.getElementById('notification-overlay');
+        overlay.classList.remove('active');
+        const userMessages = messages.filter(msg => msg.to === currentUser);
+        if (userMessages.length) {
+            messages.splice(messages.findIndex(msg => msg.to === currentUser), 1);
+            sessionStorage.setItem('messages', JSON.stringify(messages));
+        }
+    }
+
+    function checkNotifications() {
+        const userMessages = messages.filter(msg => msg.to === currentUser);
+        if (userMessages.length) {
+            const msg = userMessages[0];
+            const message = `New Gift Card from ${msg.from}!<br><strong>Brand:</strong> ${msg.brand}<br><strong>Code:</strong> ${msg.code}<br><strong>PIN:</strong> ${msg.pin}<br><strong>Transaction ID:</strong> ${msg.transactionId}`;
+            showNotification(message);
+        }
+    }
+
+    function showSpinner() {
+        document.getElementById('loading-spinner').classList.remove('hidden');
+        setTimeout(() => {
+            document.getElementById('loading-spinner').classList.add('hidden');
+        }, 1000);
+    }
+
+    function simulateEmailSend(toEmail, brand, code, pin, transactionId, name) {
+        const emailContent = {
+            from: fromEmail,
+            to: toEmail,
+            subject: `Your ${brand} Gift Card from FXXXGIFTCARDZ`,
+            body: `
+                Dear ${name},
+                
+                Thank you for using FXXXGIFTCARDZ! Your ${brand} gift card details are below:
+                
+                - Gift Card Code: ${code}
+                - PIN: ${pin}
+                - Transaction ID: ${transactionId}
+                
+                Redeem your gift card on the ${brand} website or app. For support, contact our helpdesk.
+                
+                Best Regards,
+                FXXXGIFTCARDZ Team
+            `
+        };
+        console.log('Simulated Email Sent:', emailContent);
+    }
+
+    function simulateMessageSend(toUsername, brand, code, pin, transactionId, sender) {
+        const messageContent = {
+            from: sender,
+            to: toUsername,
+            brand: brand.charAt(0).toUpperCase() + brand.slice(1),
+            code,
+            pin,
+            transactionId
+        };
+        messages.push(messageContent);
+        sessionStorage.setItem('messages', JSON.stringify(messages));
+        console.log('Simulated Message Sent:', messageContent);
+    }
+
+    function loadTransactionHistory() {
+        const historyElement = document.getElementById('transaction-history');
+        const transactions = users[currentUser]?.transactions || [];
+        historyElement.innerHTML = transactions.length ? transactions.map(tx => `
+            <div class="bg-white p-4 rounded-md mb-2 fade-in">
+                <p><strong>Transaction ID:</strong> ${tx.transactionId}</p>
+                <p><strong>Brand:</strong> ${tx.brand}</p>
+                <p><strong>Name:</strong> ${tx.name}</p>
+                <p><strong>Phone:</strong> ${tx.phone}</p>
+                <p><strong>Email:</strong> ${tx.email || 'N/A'}</p>
+                <p><strong>Recipient Username:</strong> ${tx.recipientUsername || 'N/A'}</p>
+                <p><strong>Code:</strong> ${tx.code}</p>
+                <p><strong>PIN:</strong> ${tx.pin}</p>
+                <p><strong>Status:</strong> ${tx.status}</p>
+            </div>
+        `).join('') : '<p class="text-white">No transactions yet.</p>';
+    }
+
+    function updateTransactionHistory(brand, name, phone, email, recipientUsername, code, pin, transactionId) {
+        const status = Math.random() > 0.2 ? 'Completed' : Math.random() > 0.5 ? 'Pending' : 'Failed';
+        users[currentUser].transactions.unshift({ brand, name, phone, email, recipientUsername, code, pin, transactionId, status });
+        if (users[currentUser].transactions.length > 5) users[currentUser].transactions.pop();
+        localStorage.setItem('users', JSON.stringify(users));
+
+        giftCards.push({ brand, code, pin, transactionId });
+        localStorage.setItem('giftCards', JSON.stringify(giftCards));
+
+        loadTransactionHistory();
+    }
+
+    function generateCard(brand) {
+        if (!currentUser) {
+            alert('Please log in to generate a gift card.');
+            showAuthModal('login');
+            return;
+        }
+
+        const nameInput = document.getElementById(`${brand}-name`);
+        const phoneInput = document.getElementById(`${brand}-phone`);
+        const emailInput = document.getElementById(`${brand}-email`);
+        const usernameInput = document.getElementById(`${brand}-username`);
+        const codeElement = document.getElementById(`${brand}-code`);
+        const pinElement = document.getElementById(`${brand}-pin`);
+
+        if (!nameInput.value.trim()) {
+            alert('Please enter your name.');
+            return;
+        }
+        if (!phoneInput.value.match(/^[0-9]{10}$/)) {
+            alert('Please enter a valid 10-digit phone number.');
+            return;
+        }
+        if (!emailInput.value && !usernameInput.value.trim()) {
+            alert('Please enter either a recipient email or username.');
+            return;
+        }
+        if (emailInput.value && !emailInput.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+            alert('Please enter a valid email address (e.g., example@gmail.com).');
+            return;
+        }
+        if (usernameInput.value.trim() && !users[usernameInput.value.trim()]) {
+            alert('Recipient username does not exist.');
+            return;
+        }
+
+        showSpinner();
+        setTimeout(() => {
+            const code = generateRandomCode();
+            const pin = generateRandomPin();
+            const transactionId = generateTransactionId();
+
+            codeElement.textContent = code;
+            pinElement.textContent = pin;
+            codeElement.parentElement.parentElement.classList.add('flip-animation');
+            showSuccessAnimation();
+
+            if (emailInput.value) {
+                simulateEmailSend(emailInput.value, brand.charAt(0).toUpperCase() + brand.slice(1), code, pin, transactionId, nameInput.value);
+                showEmailConfirmation();
+            }
+            if (usernameInput.value.trim()) {
+                simulateMessageSend(usernameInput.value.trim(), brand, code, pin, transactionId, currentUser);
+                showMessageConfirmation();
+            }
+
+            updateTransactionHistory(
+                brand.charAt(0).toUpperCase() + brand.slice(1),
+                nameInput.value,
+                phoneInput.value,
+                emailInput.value || null,
+                usernameInput.value.trim() || null,
+                code,
+                pin,
+                transactionId
+            );
+
+            setTimeout(() => {
+                codeElement.parentElement.parentElement.classList.remove('flip-animation');
+            }, 1500);
+        }, 1000);
+    }
+
+    function checkTransaction() {
+        if (!currentUser) {
+            alert('Please log in to check transactions.');
+            showAuthModal('login');
+            return;
+        }
+
+        const transactionIdInput = document.getElementById('transaction-id-input').value.trim();
+        const statusElement = document.getElementById('transaction-status');
+        const transaction = users[currentUser]?.transactions.find(tx => tx.transactionId === transactionIdInput);
+
+        if (!transactionIdInput) {
+            statusElement.innerHTML = '<p class="text-red-500 fade-in">Please enter a Transaction ID.</p>';
+            return;
+        }
+
+        showSpinner();
+        setTimeout(() => {
+            if (transaction) {
+                statusElement.innerHTML = `
+                    <div class="bg-white text-black p-4 rounded-md fade-in">
+                        <p><strong>Transaction ID:</strong> ${transaction.transactionId}</p>
+                        <p><strong>Brand:</strong> ${transaction.brand}</p>
+                        <p><strong>Name:</strong> ${transaction.name}</p>
+                        <p><strong>Phone:</strong> ${transaction.phone}</p>
+                        <p><strong>Email:</strong> ${transaction.email || 'N/A'}</p>
+                        <p><strong>Recipient Username:</strong> ${transaction.recipientUsername || 'N/A'}</p>
+                        <p><strong>Code:</strong> ${transaction.code}</p>
+                        <p><strong>PIN:</strong> ${transaction.pin}</p>
+                        <p><strong>Status:</strong> ${transaction.status}</p>
+                    </div>
+                `;
+            } else {
+                statusElement.innerHTML = '<p class="text-red-500 fade-in">No transaction found with this ID.</p>';
+            }
+        }, 1000);
+    }
+
+    // Initialize
+    if (currentUser) {
+        showMainContent();
+        loadTransactionHistory();
+    } else {
+        showAuthModal('login');
+    }
+              </script>
