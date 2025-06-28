@@ -1,515 +1,714 @@
-<!-- Notification Overlay -->
-<div id="notification-overlay" class="notification-overlay">
-    <div class="text-center chat-bubble bg-white text-black p-6 rounded-lg max-w-md">
-        <svg width="100" height="100" viewBox="0 0 100 100">
-            <path d="M20 20 H80 A20 20 0 0 1 80 80 H40 L20 60 V20 Z" fill="#4CAF50"/>
-            <path class="checkmark-circle" d="M35 50 L45 60 L65 40" stroke="#fff" stroke-width="4"/>
-        </svg>
-        <p class="text-xl mt-4" id="notification-message"></p>
-        <button onclick="closeNotification()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Close</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FXXXGIFTCARDZ - Free Gift Cards (Educational Demo)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animation Keyframes */
+        @keyframes slideIn {
+            0% { transform: translateY(-100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        @keyframes zoomIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #fff; }
+            50% { box-shadow: 0 0 20px #fff, 0 0 30px rgba(255, 255, 255, 0.8); }
+            100% { box-shadow: 0 0 5px #fff; }
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes twirl {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(180deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* General Styles */
+        body {
+            background: linear-gradient(45deg, #7e22ce, #ec4899, #7e22ce);
+            background-size: 200% 200%;
+            animation: gradientShift 10s ease infinite;
+        }
+        .card {
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: scale(1.1) rotate(3deg);
+            animation: shake 0.5s;
+        }
+        .slide-in { animation: slideIn 0.8s ease-out; }
+        .bounce { animation: bounce 1.2s infinite; }
+        .pulse { animation: pulse 1.5s infinite; }
+        .zoom-in { animation: zoomIn 0.5s; }
+        .glow { animation: glow 2s infinite; }
+        .spin { animation: spin 2s linear infinite; }
+        .float { animation: float 3s infinite; }
+        .twirl { animation: twirl 3s infinite; }
+        .spinner {
+            border: 6px solid #d1d5db;
+            border-top: 6px solid #10b981;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .overlay.active { display: flex; animation: zoomIn 0.5s; }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            animation: pulse 2s infinite;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #facc15;
+            animation: confetti 3s linear forwards;
+        }
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path d="M20 5 L25 10 L20 15 L15 10 Z" fill="rgba(255,255,255,0.2)"/><path d="M20 25 L25 30 L20 35 L15 30 Z" fill="rgba(255,255,255,0.2)"/></svg>');
+            opacity: 0.2;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center text-white font-sans">
+    <div class="bg-pattern"></div>
+
+    <!-- Audio Elements for Sound Effects -->
+    <audio id="welcome-sound" src="data:audio/mp3;base64,/+MYxAAAAANIAAAAAExBTUUzLjEwMC4yMKJodHRwOi8vd3d3LmZyZWVzb3VuZC5vcmcvc2FtcGxlcy9jaGltZXMubXAzAA==;"></audio>
+    <audio id="success-sound" src="data:audio/mp3;base64,/+MYxAAAAANIAAAAAExBTUUzLjEwMC4yMKJodHRwOi8vd3d3LmZyZWVzb3VuZC5vcmcvc2FtcGxlcy9wb3AubXAzAA==;"></audio>
+
+    <!-- Welcome Popup -->
+    <div id="welcome-popup" class="overlay active">
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 rounded-2xl w-96 shadow-2xl zoom-in">
+            <svg width="80" height="80" viewBox="0 0 100 100" class="spin mx-auto">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#facc15" stroke-width="6"/>
+                <path d="M50 30 A20 20 0 0 1 70 50 A20 20 0 0 1 50 70 A20 20 0 0 1 30 50 A20 20 0 0 1 50 30" fill="#facc15"/>
+            </svg>
+            <h2 class="text-3xl font-bold mb-4 text-center text-white pulse">Welcome to FXXXGIFTCARDZ!</h2>
+            <p class="text-lg mb-6 text-center text-yellow-200 float">Create and share fun gift cards!</p>
+            <button onclick="closeWelcome()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Get Started</button>
+        </div>
     </div>
-</div>
 
-<!-- Main Content -->
-<div id="main-content" class="w-full hidden">
-    <header class="text-center py-10">
-        <h1 class="text-5xl font-bold animate-pulse">FXXXGIFTCARDZ</h1>
-        <p class="text-lg mt-2">Claim Your Free Gift Cards Instantly!</p>
-        <button id="logout-btn" class="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Logout</button>
-    </header>
+    <!-- Login/Signup Popup -->
+    <div id="auth-popup" class="overlay">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 rounded-2xl w-96 shadow-2xl zoom-in">
+            <h2 id="auth-title" class="text-3xl font-bold mb-6 text-center text-white pulse">Login</h2>
+            <p id="auth-error" class="text-yellow-200 mb-4 text-center hidden"></p>
+            <input type="text" id="auth-username" placeholder="Username (e.g., example123)" class="mb-4 p-3 w-full rounded-lg text-black focus:ring-2 focus:ring-yellow-300 slide-in">
+            <div class="flex justify-between items-center">
+                <button id="auth-submit" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Login</button>
+                <button id="toggle-auth" class="text-yellow-200 hover:text-yellow-300 underline slide-in">Sign Up</button>
+            </div>
+        </div>
+    </div>
 
-    <main class="w-full max-w-6xl mx-auto p-6">
-        <!-- Gift Card Generator Section -->
-        <section class="mb-10">
-            <h2 class="text-3xl font-semibold mb-6 text-center fade-in">Gift Card Categories</h2>
-            <div id="loading-spinner" class="spinner mx-auto mb-4 hidden"></div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Flipkart Card -->
-                <div class="card bg-orange-500 rounded-lg shadow-lg p-6 text-center glow-animation">
-                    <div class="logo-placeholder">Flipkart Logo</div>
-                    <h2 class="text-2xl font-semibold mb-4">Flipkart Gift Card</h2>
-                    <div class="bg-white text-black p-4 rounded-md mb-4">
-                        <p class="text-lg">Code: <span id="flipkart-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p class="text-lg">PIN: <span id="flipkart-pin">XXXX</span></p>
+    <!-- Notification Popup -->
+    <div id="notify-popup" class="overlay">
+        <div class="bg-gradient-to-r from-green-500 to-teal-500 p-8 rounded-2xl w-96 shadow-2xl zoom-in relative">
+            <div class="confetti" style="left: 10%; top: -10px;"></div>
+            <div class="confetti" style="left: 30%; top: -20px; background: #ef4444;"></div>
+            <div class="confetti" style="left: 50%; top: -15px; background: #3b82f6;"></div>
+            <div class="confetti" style="left: 70%; top: -25px; background: #ec4899;"></div>
+            <div class="confetti" style="left: 90%; top: -10px;"></div>
+            <p class="text-xl mb-6 text-white" id="notify-message"></p>
+            <button onclick="closeNotify()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">OK</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="w-full max-w-5xl mx-auto p-6 hidden">
+        <header class="text-center py-8">
+            <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-pink-500 animate-pulse">FXXXGIFTCARDZ</h1>
+            <p class="text-xl mt-3 text-yellow-200 float">Send Free Gift Cards with Joy!</p>
+            <button id="logout-btn" class="mt-6 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 shake">Logout</button>
+        </header>
+
+        <!-- Gift Card Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 text-center text-yellow-200 slide-in">Choose a Gift Card</h2>
+            <div id="spinner" class="spinner hidden"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Flipkart -->
+                <div class="card bg-gradient-to-br from-orange-400 to-orange-600 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
                     </div>
-                    <div class="registration-form">
-                        <input type="text" id="flipkart-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
-                        <input type="tel" id="flipkart-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
-                        <input type="email" id="flipkart-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
-                        <input type="text" id="flipkart-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
-                        <button onclick="generateCard('flipkart')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    <h3 class="text-2xl font-bold text-white">Flipkart Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
+                        <p>Code: <span id="flipkart-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p>PIN: <span id="flipkart-pin">XXXX</span></p>
                     </div>
+                    <input type="text" id="flipkart-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="flipkart-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="flipkart-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="flipkart-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('flipkart')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
                 </div>
 
-                <!-- Amazon Card -->
-                <div class="card bg-yellow-500 rounded-lg shadow-lg p-6 text-center glow-animation">
-                    <div class="logo-placeholder">Amazon Logo</div>
-                    <h2 class="text-2xl font-semibold mb-4">Amazon Gift Card</h2>
-                    <div class="bg-white text-black p-4 rounded-md mb-4">
-                        <p class="text-lg">Code: <span id="amazon-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p class="text-lg">PIN: <span id="amazon-pin">XXXX</span></p>
+                <!-- Amazon -->
+                <div class="card bg-gradient-to-br from-yellow-300 to-yellow-500 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
+                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
+                        </svg>
                     </div>
-                    <div class="registration-form">
-                        <input type="text" id="amazon-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
-                        <input type="tel" id="amazon-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
-                        <input type="email" id="amazon-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
-                        <input type="text" id="amazon-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
-                        <button onclick="generateCard('amazon')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    <h3 class="text-2xl font-bold text-white">Amazon Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
+                        <p>Code: <span id="amazon-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p>PIN: <span id="amazon-pin">XXXX</span></p>
                     </div>
+                    <input type="text" id="amazon-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="amazon-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="amazon-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="amazon-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('amazon')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
                 </div>
 
-                <!-- Swiggy Card -->
-                <div class="card bg-orange-600 rounded-lg shadow-lg p-6 text-center glow-animation">
-                    <div class="logo-placeholder">Swiggy Logo</div>
-                    <h2 class="text-2xl font-semibold mb-4">Swiggy Gift Card</h2>
-                    <div class="bg-white text-black p-4 rounded-md mb-4">
-                        <p class="text-lg">Code: <span id="swiggy-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p class="text-lg">PIN: <span id="swiggy-pin">XXXX</span></p>
+                <!-- Swiggy -->
+                <div class="card bg-gradient-to-br from-orange-500 to-red-500 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
                     </div>
-                    <div class="registration-form">
-                        <input type="text" id="swiggy-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
-                        <input type="tel" id="swiggy-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
-                        <input type="email" id="swiggy-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
-                        <input type="text" id="swiggy-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
-                        <button onclick="generateCard('swiggy')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    <h3 class="text-2xl font-bold text-white">Swiggy Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
+                        <p>Code: <span id="swiggy-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p>PIN: <span id="swiggy-pin">XXXX</span></p>
                     </div>
+                    <input type="text" id="swiggy-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="swiggy-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="swiggy-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="swiggy-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('swiggy')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
                 </div>
 
-                <!-- Zomato Card -->
-                <div class="card bg-red-500 rounded-lg shadow-lg p-6 text-center glow-animation">
-                    <div class="logo-placeholder">Zomato Logo</div>
-                    <h2 class="text-2xl font-semibold mb-4">Zomato Gift Card</h2>
-                    <div class="bg-white text-black p-4 rounded-md mb-4">
-                        <p class="text-lg">Code: <span id="zomato-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p class="text-lg">PIN: <span id="zomato-pin">XXXX</span></p>
+                <!-- Zomato -->
+                <div class="card bg-gradient-to-br from-red-400 to-red-600 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
                     </div>
-                    <div class="registration-form">
-                        <input type="text" id="zomato-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
-                        <input type="tel" id="zomato-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
-                        <input type="email" id="zomato-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
-                        <input type="text" id="zomato-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
-                        <button onclick="generateCard('zomato')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    <h3 class="text-2xl font-bold text-white">Zomato Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
+                        <p>Code: <span id="zomato-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p>PIN: <span id="zomato-pin">XXXX</span></p>
                     </div>
+                    <input type="text" id="zomato-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="zomato-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="zomato-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="zomato-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('zomato')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
                 </div>
 
-                <!-- Domino's Card -->
-                <div class="card bg-blue-600 rounded-lg shadow-lg p-6 text-center glow-animation">
-                    <div class="logo-placeholder">Domino's Logo</div>
-                    <h2 class="text-2xl font-semibold mb-4">Domino's Gift Card</h2>
-                    <div class="bg-white text-black p-4 rounded-md mb-4">
-                        <p class="text-lg">Code: <span id="dominos-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p class="text-lg">PIN: <span id="dominos-pin">XXXX</span></p>
+                <!-- Domino's -->
+                <div class="card bg-gradient-to-br from-blue-500 to-blue-700 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#0046be"/>
+                            <circle cx="40" cy="40" r="10" fill="white"/>
+                            <circle cx="60" cy="60" r="10" fill="white"/>
+                        </svg>
                     </div>
-                    <div class="registration-form">
-                        <input type="text" id="dominos-name" placeholder="Enter Your Name" class="mb-2 p-2 w-full rounded text-black" required>
-                        <input type="tel" id="dominos-phone" placeholder="Enter Phone Number" class="mb-2 p-2 w-full rounded text-black" pattern="[0-9]{10}" required>
-                        <input type="email" id="dominos-email" placeholder="Enter Recipient Email (optional)" class="mb-2 p-2 w-full rounded text-black">
-                        <input type="text" id="dominos-username" placeholder="Enter Recipient Username (e.g., example1234)" class="mb-2 p-2 w-full rounded text-black">
-                        <button onclick="generateCard('dominos')" class="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Generate & Send</button>
+                    <h3 class="text-2xl font-bold text-white">Domino's Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
+                        <p>Code: <span id="dominos-code">XXXX-XXXX-XXXX-XXXX</span></p>
+                        <p>PIN: <span id="dominos-pin">XXXX</span></p>
                     </div>
+                    <input type="text" id="dominos-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="dominos-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="dominos-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="dominos-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('dominos')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
                 </div>
             </div>
         </section>
 
-        <!-- Recent History Section -->
-        <section class="w-full bg-gray-800 rounded-lg p-6 mb-10 fade-in">
-            <h2 class="text-2xl font-semibold mb-4">Recent Transaction History</h2>
-            <div id="transaction-history" class="text-black"></div>
+        <!-- Transaction History -->
+        <section class="bg-gradient-to-r from-gray-700 to-gray-900 p-6 rounded-xl mb-12 shadow-lg slide-in">
+            <h2 class="text-3xl font-bold mb-6 text-yellow-200">Your Transactions</h2>
+            <div id="transaction-history" class="space-y-4"></div>
         </section>
 
-        <!-- Transaction Checker Section -->
-        <section class="w-full bg-gray-800 rounded-lg p-6 fade-in">
-            <h2 class="text-2xl font-semibold mb-4">Transaction Checker</h2>
-            <div class="flex flex-col md:flex-row gap-4">
-                <input type="text" id="transaction-id-input" placeholder="Enter Transaction ID" class="p-2 rounded text-black flex-1">
-                <button onclick="checkTransaction()" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Check Status</button>
+        <!-- Transaction Checker -->
+        <section class="bg-gradient-to-r from-gray-700 to-gray-900 p-6 rounded-xl shadow-lg slide-in">
+            <h2 class="text-3xl font-bold mb-6 text-yellow-200">Check Transaction</h2>
+            <div class="flex gap-3">
+                <input type="text" id="transaction-id-input" placeholder="Enter Transaction ID" class="p-3 rounded-lg text-black flex-1 slide-in">
+                <button onclick="checkTransaction()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Check</button>
             </div>
-            <div id="transaction-status" class="mt-4 text-lg"></div>
+            <div id="transaction-status" class="mt-6 text-xl text-white"></div>
         </section>
-    </main>
 
-    <!-- Success Animation Overlay -->
-    <div id="success-overlay" class="success-overlay">
-        <div class="text-center">
-            <svg width="100" height="100" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#4CAF50" stroke-width="4"/>
-                <path class="checkmark-circle" d="M30 50 L45 65 L70 35"/>
-            </svg>
-            <p class="text-2xl mt-4 success-message">Gift Card Generated Successfully!</p>
+        <!-- Success Popup -->
+        <div id="success-popup" class="overlay">
+            <div class="text-center zoom-in">
+                <svg width="80" height="80" viewBox="0 0 100 100" class="spin">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#10b981" stroke-width="6"/>
+                    <path d="M30 50 L45 65 L70 35" stroke="#10b981" stroke-width="6"/>
+                </svg>
+                <p class="text-2xl mt-3 text-white pulse">Gift Card Generated!</p>
+            </div>
         </div>
-    </div>
 
-    <!-- Email Sent Confirmation Overlay -->
-    <div id="email-overlay" class="email-overlay">
-        <div class="text-center">
-            <svg width="100" height="100" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#4CAF50" stroke-width="4"/>
-                <path class="checkmark-circle" d="M30 50 L45 65 L70 35"/>
-            </svg>
-            <p class="text-2xl mt-4 success-message">Gift Card Sent to Email!</p>
+        <!-- Email Confirmation Popup -->
+        <div id="email-popup" class="overlay">
+            <div class="text-center zoom-in">
+                <svg width="80" height="80" viewBox="0 0 100 100" class="spin">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#10b981" stroke-width="6"/>
+                    <path d="M30 50 L45 65 L70 35" stroke="#10b981" stroke-width="6"/>
+                </svg>
+                <p class="text-2xl mt-3 text-white pulse">Gift Card Sent to Email!</p>
+            </div>
         </div>
-    </div>
 
-    <!-- Message Sent Confirmation Overlay -->
-    <div id="message-overlay" class="message-overlay">
-        <div class="text-center chat-bubble">
-            <svg width="100" height="100" viewBox="0 0 100 100">
-                <path d="M20 20 H80 A20 20 0 0 1 80 80 H40 L20 60 V20 Z" fill="#4CAF50"/>
-                <path class="checkmark-circle" d="M35 50 L45 60 L65 40" stroke="#fff" stroke-width="4"/>
-            </svg>
-            <p class="text-2xl mt-4 success-message">Gift Card Sent to Username!</p>
+        <!-- Message Confirmation Popup -->
+        <div id="message-popup" class="overlay">
+            <div class="text-center zoom-in">
+                <svg width="80" height="80" viewBox="0 0 100 100" class="spin">
+                    <path d="M20 20 H80 A20 20 0 0 1 80 80 H40 L20 60 V20 Z" fill="#10b981"/>
+                    <path d="M35 50 L45 60 L65 40" stroke="#fff" stroke-width="6"/>
+                </svg>
+                <p class="text-2xl mt-3 text-white pulse">Gift Card Sent to Username!</p>
+            </div>
         </div>
     </div>
 
     <footer class="py-6 text-center">
-        <p class="text-sm">© 2025 FXXXGIFTCARDZ. All rights reserved. (Fictional website for demonstration only)</p>
-        <div class="mt-2">
-            <a href="#" class="text-blue-400 hover:underline mx-2">Terms & Conditions</a>
-            <a href="#" class="text-blue-400 hover:underline mx-2">Privacy Policy</a>
-            <a href="#" class="text-blue-400 hover:underline mx-2">Contact Us</a>
-        </div>
+        <p class="text-sm text-yellow-200 float">© 2025 FXXXGIFTCARDZ. Educational Demo Only!</p>
     </footer>
-</div>
 
-<script>
-    // User Management
-    let currentUser = null;
-    const users = JSON.parse(localStorage.getItem('users')) || {};
-    const messages = JSON.parse(sessionStorage.getItem('messages')) || [];
-    const giftCards = JSON.parse(localStorage.getItem('giftCards')) || [];
-    const fromEmail = 'dasritam288@gmail.com';
-
-    function showAuthModal(mode) {
-        const modal = document.getElementById('auth-modal');
-        const title = document.getElementById('auth-title');
-        const submitBtn = document.getElementById('auth-submit');
-        const toggleBtn = document.getElementById('toggle-auth');
-        const error = document.getElementById('auth-error');
-        error.classList.add('hidden');
-        title.textContent = mode === 'login' ? 'Login' : 'Sign Up';
-        submitBtn.textContent = mode === 'login' ? 'Login' : 'Sign Up';
-        toggleBtn.textContent = mode === 'login' ? 'Sign Up' : 'Login';
-        modal.classList.remove('hidden');
-    }
-
-    function hideAuthModal() {
-        document.getElementById('auth-modal').classList.add('hidden');
-        document.getElementById('auth-username').value = '';
-        document.getElementById('auth-password').value = '';
-        document.getElementById('auth-error').classList.add('hidden');
-    }
-
-    function showMainContent() {
-        document.getElementById('main-content').classList.remove('hidden');
-        checkNotifications();
-    }
-
-    document.getElementById('auth-submit').addEventListener('click', () => {
-        const username = document.getElementById('auth-username').value.trim();
-        const password = document.getElementById('auth-password').value.trim();
-        const error = document.getElementById('auth-error');
-        const mode = document.getElementById('auth-title').textContent.toLowerCase();
-
-        if (!username || !password) {
-            error.textContent = 'Please fill in all fields.';
-            error.classList.remove('hidden');
-            return;
+    <script>
+        // Sound and Haptic Functions
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            sound.play().catch(() => console.log('Sound playback failed'));
         }
 
-        if (mode === 'login') {
-            if (users[username] && users[username].password === password) {
-                currentUser = username;
-                hideAuthModal();
-                showMainContent();
-                loadTransactionHistory();
-            } else {
-                error.textContent = 'Invalid username or password.';
-                error.classList.remove('hidden');
-            }
-        } else {
-            if (users[username]) {
-                error.textContent = 'Username already exists.';
-                error.classList.remove('hidden');
-            } else {
-                users[username] = { password, transactions: [] };
-                localStorage.setItem('users', JSON.stringify(users));
-                currentUser = username;
-                hideAuthModal();
-                showMainContent();
-                loadTransactionHistory();
+        function triggerHaptic() {
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]); // Short joyful vibration pattern
             }
         }
-    });
 
-    document.getElementById('toggle-auth').addEventListener('click', () => {
-        const mode = document.getElementById('auth-title').textContent.toLowerCase();
-        showAuthModal(mode === 'login' ? 'signup' : 'login');
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-        currentUser = null;
-        document.getElementById('main-content').classList.add('hidden');
-        showAuthModal('login');
-    });
-
-    // Gift Card Generation
-    function generateRandomCode() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = '';
-        for (let i = 0; i < 16; i++) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-            if (i === 3 || i === 7 || i === 11) code += '-';
+        // Local Storage Management
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('fxxx_users')) || {};
         }
-        return code;
-    }
 
-    function generateRandomPin() {
-        return Math.floor(1000 + Math.random() * 9000).toString();
-    }
-
-    function generateTransactionId() {
-        return 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-    }
-
-    function showSuccessAnimation() {
-        const overlay = document.getElementById('success-overlay');
-        overlay.classList.add('active');
-        setTimeout(() => {
-            overlay.classList.remove('active');
-        }, 2000);
-    }
-
-    function showEmailConfirmation() {
-        const overlay = document.getElementById('email-overlay');
-        overlay.classList.add('active');
-        setTimeout(() => {
-            overlay.classList.remove('active');
-        }, 2000);
-    }
-
-    function showMessageConfirmation() {
-        const overlay = document.getElementById('message-overlay');
-        overlay.classList.add('active');
-        setTimeout(() => {
-            overlay.classList.remove('active');
-        }, 2000);
-    }
-
-    function showNotification(message) {
-        const overlay = document.getElementById('notification-overlay');
-        const messageElement = document.getElementById('notification-message');
-        messageElement.innerHTML = message;
-        overlay.classList.add('active');
-    }
-
-    function closeNotification() {
-        const overlay = document.getElementById('notification-overlay');
-        overlay.classList.remove('active');
-        const userMessages = messages.filter(msg => msg.to === currentUser);
-        if (userMessages.length) {
-            messages.splice(messages.findIndex(msg => msg.to === currentUser), 1);
-            sessionStorage.setItem('messages', JSON.stringify(messages));
+        function saveUsers(users) {
+            localStorage.setItem('fxxx_users', JSON.stringify(users));
         }
-    }
 
-    function checkNotifications() {
-        const userMessages = messages.filter(msg => msg.to === currentUser);
-        if (userMessages.length) {
-            const msg = userMessages[0];
-            const message = `New Gift Card from ${msg.from}!<br><strong>Brand:</strong> ${msg.brand}<br><strong>Code:</strong> ${msg.code}<br><strong>PIN:</strong> ${msg.pin}<br><strong>Transaction ID:</strong> ${msg.transactionId}`;
-            showNotification(message);
+        function getMessages() {
+            return JSON.parse(localStorage.getItem('fxxx_messages')) || [];
         }
-    }
 
-    function showSpinner() {
-        document.getElementById('loading-spinner').classList.remove('hidden');
-        setTimeout(() => {
-            document.getElementById('loading-spinner').classList.add('hidden');
-        }, 1000);
-    }
+        function saveMessages(messages) {
+            localStorage.setItem('fxxx_messages', JSON.stringify(messages));
+        }
 
-    function simulateEmailSend(toEmail, brand, code, pin, transactionId, name) {
-        const emailContent = {
-            from: fromEmail,
-            to: toEmail,
-            subject: `Your ${brand} Gift Card from FXXXGIFTCARDZ`,
-            body: `
-                Dear ${name},
-                
-                Thank you for using FXXXGIFTCARDZ! Your ${brand} gift card details are below:
-                
-                - Gift Card Code: ${code}
-                - PIN: ${pin}
-                - Transaction ID: ${transactionId}
-                
-                Redeem your gift card on the ${brand} website or app. For support, contact our helpdesk.
-                
-                Best Regards,
-                FXXXGIFTCARDZ Team
-            `
-        };
-        console.log('Simulated Email Sent:', emailContent);
-    }
+        // UI Functions
+        function showWelcome() {
+            const popup = document.getElementById('welcome-popup');
+            popup.classList.add('active');
+            playSound('welcome-sound');
+            triggerHaptic();
+        }
 
-    function simulateMessageSend(toUsername, brand, code, pin, transactionId, sender) {
-        const messageContent = {
-            from: sender,
-            to: toUsername,
-            brand: brand.charAt(0).toUpperCase() + brand.slice(1),
-            code,
-            pin,
-            transactionId
-        };
-        messages.push(messageContent);
-        sessionStorage.setItem('messages', JSON.stringify(messages));
-        console.log('Simulated Message Sent:', messageContent);
-    }
-
-    function loadTransactionHistory() {
-        const historyElement = document.getElementById('transaction-history');
-        const transactions = users[currentUser]?.transactions || [];
-        historyElement.innerHTML = transactions.length ? transactions.map(tx => `
-            <div class="bg-white p-4 rounded-md mb-2 fade-in">
-                <p><strong>Transaction ID:</strong> ${tx.transactionId}</p>
-                <p><strong>Brand:</strong> ${tx.brand}</p>
-                <p><strong>Name:</strong> ${tx.name}</p>
-                <p><strong>Phone:</strong> ${tx.phone}</p>
-                <p><strong>Email:</strong> ${tx.email || 'N/A'}</p>
-                <p><strong>Recipient Username:</strong> ${tx.recipientUsername || 'N/A'}</p>
-                <p><strong>Code:</strong> ${tx.code}</p>
-                <p><strong>PIN:</strong> ${tx.pin}</p>
-                <p><strong>Status:</strong> ${tx.status}</p>
-            </div>
-        `).join('') : '<p class="text-white">No transactions yet.</p>';
-    }
-
-    function updateTransactionHistory(brand, name, phone, email, recipientUsername, code, pin, transactionId) {
-        const status = Math.random() > 0.2 ? 'Completed' : Math.random() > 0.5 ? 'Pending' : 'Failed';
-        users[currentUser].transactions.unshift({ brand, name, phone, email, recipientUsername, code, pin, transactionId, status });
-        if (users[currentUser].transactions.length > 5) users[currentUser].transactions.pop();
-        localStorage.setItem('users', JSON.stringify(users));
-
-        giftCards.push({ brand, code, pin, transactionId });
-        localStorage.setItem('giftCards', JSON.stringify(giftCards));
-
-        loadTransactionHistory();
-    }
-
-    function generateCard(brand) {
-        if (!currentUser) {
-            alert('Please log in to generate a gift card.');
+        function closeWelcome() {
+            const popup = document.getElementById('welcome-popup');
+            popup.classList.remove('active');
             showAuthModal('login');
-            return;
         }
 
-        const nameInput = document.getElementById(`${brand}-name`);
-        const phoneInput = document.getElementById(`${brand}-phone`);
-        const emailInput = document.getElementById(`${brand}-email`);
-        const usernameInput = document.getElementById(`${brand}-username`);
-        const codeElement = document.getElementById(`${brand}-code`);
-        const pinElement = document.getElementById(`${brand}-pin`);
-
-        if (!nameInput.value.trim()) {
-            alert('Please enter your name.');
-            return;
-        }
-        if (!phoneInput.value.match(/^[0-9]{10}$/)) {
-            alert('Please enter a valid 10-digit phone number.');
-            return;
-        }
-        if (!emailInput.value && !usernameInput.value.trim()) {
-            alert('Please enter either a recipient email or username.');
-            return;
-        }
-        if (emailInput.value && !emailInput.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-            alert('Please enter a valid email address (e.g., example@gmail.com).');
-            return;
-        }
-        if (usernameInput.value.trim() && !users[usernameInput.value.trim()]) {
-            alert('Recipient username does not exist.');
-            return;
+        function showAuthModal(mode) {
+            const popup = document.getElementById('auth-popup');
+            popup.classList.add('active');
+            document.getElementById('auth-title').textContent = mode === 'login' ? 'Login' : 'Sign Up';
+            document.getElementById('auth-submit').textContent = mode === 'login' ? 'Login' : 'Sign Up';
+            document.getElementById('toggle-auth').textContent = mode === 'login' ? 'Sign Up' : 'Login';
+            document.getElementById('auth-error').classList.add('hidden');
+            popup.querySelector('div').classList.add('zoom-in');
+            triggerHaptic();
         }
 
-        showSpinner();
-        setTimeout(() => {
-            const code = generateRandomCode();
-            const pin = generateRandomPin();
-            const transactionId = generateTransactionId();
+        function hideAuthModal() {
+            const popup = document.getElementById('auth-popup');
+            popup.classList.remove('active');
+            document.getElementById('auth-username').value = '';
+            document.getElementById('auth-error').classList.add('hidden');
+            popup.querySelector('div').classList.remove('zoom-in');
+        }
 
-            codeElement.textContent = code;
-            pinElement.textContent = pin;
-            codeElement.parentElement.parentElement.classList.add('flip-animation');
-            showSuccessAnimation();
+        function showMainContent() {
+            document.getElementById('main-content').classList.remove('hidden');
+            document.querySelectorAll('.card, section').forEach(el => el.classList.add('slide-in'));
+            checkNotifications();
+            loadTransactionHistory();
+        }
 
-            if (emailInput.value) {
-                simulateEmailSend(emailInput.value, brand.charAt(0).toUpperCase() + brand.slice(1), code, pin, transactionId, nameInput.value);
-                showEmailConfirmation();
-            }
-            if (usernameInput.value.trim()) {
-                simulateMessageSend(usernameInput.value.trim(), brand, code, pin, transactionId, currentUser);
-                showMessageConfirmation();
+        // Authentication
+        document.getElementById('auth-submit').addEventListener('click', () => {
+            const username = document.getElementById('auth-username').value.trim();
+            const mode = document.getElementById('auth-title').textContent.toLowerCase();
+            const error = document.getElementById('auth-error');
+            const users = getUsers();
+
+            if (!username) {
+                error.textContent = 'Please enter a username!';
+                error.classList.remove('hidden');
+                error.classList.add('shake');
+                setTimeout(() => error.classList.remove('shake'), 500);
+                triggerHaptic();
+                return;
             }
 
-            updateTransactionHistory(
-                brand.charAt(0).toUpperCase() + brand.slice(1),
-                nameInput.value,
-                phoneInput.value,
-                emailInput.value || null,
-                usernameInput.value.trim() || null,
-                code,
-                pin,
-                transactionId
-            );
+            if (mode === 'signup') {
+                if (users[username]) {
+                    error.textContent = 'Username already taken!';
+                    error.classList.remove('hidden');
+                    error.classList.add('shake');
+                    setTimeout(() => error.classList.remove('shake'), 500);
+                    triggerHaptic();
+                    return;
+                }
+                users[username] = { transactions: [] };
+                saveUsers(users);
+                sessionStorage.setItem('user', username);
+                hideAuthModal();
+                showMainContent();
+                playSound('success-sound');
+                triggerHaptic();
+            } else {
+                if (!users[username]) {
+                    error.textContent = 'Username not found!';
+                    error.classList.remove('hidden');
+                    error.classList.add('shake');
+                    setTimeout(() => error.classList.remove('shake'), 500);
+                    triggerHaptic();
+                    return;
+                }
+                sessionStorage.setItem('user', username);
+                hideAuthModal();
+                showMainContent();
+                playSound('success-sound');
+                triggerHaptic();
+            }
+        });
 
+        document.getElementById('toggle-auth').addEventListener('click', () => {
+            const mode = document.getElementById('auth-title').textContent.toLowerCase();
+            showAuthModal(mode === 'login' ? 'signup' : 'login');
+            triggerHaptic();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            sessionStorage.removeItem('user');
+            document.getElementById('main-content').classList.add('hidden');
+            showAuthModal('login');
+            playSound('success-sound');
+            triggerHaptic();
+        });
+
+        // Animations
+        function showSuccessAnimation() {
+            const overlay = document.getElementById('success-popup');
+            overlay.classList.add('active');
+            playSound('success-sound');
+            triggerHaptic();
+            setTimeout(() => overlay.classList.remove('active'), 2000);
+        }
+
+        function showEmailConfirmation() {
+            const overlay = document.getElementById('email-popup');
+            overlay.classList.add('active');
+            playSound('success-sound');
+            triggerHaptic();
+            setTimeout(() => overlay.classList.remove('active'), 2000);
+        }
+
+        function showMessageConfirmation() {
+            const overlay = document.getElementById('message-popup');
+            overlay.classList.add('active');
+            playSound('success-sound');
+            triggerHaptic();
+            setTimeout(() => overlay.classList.remove('active'), 2000);
+        }
+
+        function showNotification(message) {
+            document.getElementById('notify-message').innerHTML = message;
+            const popup = document.getElementById('notify-popup');
+            popup.classList.add('active');
+            popup.querySelector('div').classList.add('zoom-in');
+            playSound('success-sound');
+            triggerHaptic();
+        }
+
+        function closeNotify() {
+            const popup = document.getElementById('notify-popup');
+            popup.classList.remove('active');
+            popup.querySelector('div').classList.remove('zoom-in');
+            triggerHaptic();
+        }
+
+        function showSpinner() {
+            const spinner = document.getElementById('spinner');
+            spinner.classList.remove('hidden');
+            spinner.classList.add('spin');
             setTimeout(() => {
-                codeElement.parentElement.parentElement.classList.remove('flip-animation');
-            }, 1500);
-        }, 1000);
-    }
-
-    function checkTransaction() {
-        if (!currentUser) {
-            alert('Please log in to check transactions.');
-            showAuthModal('login');
-            return;
+                spinner.classList.add('hidden');
+                spinner.classList.remove('spin');
+            }, 1000);
         }
 
-        const transactionIdInput = document.getElementById('transaction-id-input').value.trim();
-        const statusElement = document.getElementById('transaction-status');
-        const transaction = users[currentUser]?.transactions.find(tx => tx.transactionId === transactionIdInput);
+        // Gift Card Logic
+        function generateCard(brand) {
+            const nameInput = document.getElementById(`${brand}-name`);
+            const phoneInput = document.getElementById(`${brand}-phone`);
+            const emailInput = document.getElementById(`${brand}-email`);
+            const usernameInput = document.getElementById(`${brand}-username`);
+            const codeElement = document.getElementById(`${brand}-code`);
+            const pinElement = document.getElementById(`${brand}-pin`);
+            const user = sessionStorage.getItem('user');
+            const users = getUsers();
 
-        if (!transactionIdInput) {
-            statusElement.innerHTML = '<p class="text-red-500 fade-in">Please enter a Transaction ID.</p>';
-            return;
+            if (!nameInput.value.trim()) {
+                alert('Please enter your name!');
+                nameInput.classList.add('shake');
+                setTimeout(() => nameInput.classList.remove('shake'), 500);
+                triggerHaptic();
+                return;
+            }
+            if (!phoneInput.value.match(/^[0-9]{10}$/)) {
+                alert('Please enter a valid 10-digit phone number!');
+                phoneInput.classList.add('shake');
+                setTimeout(() => phoneInput.classList.remove('shake'), 500);
+                triggerHaptic();
+                return;
+            }
+            if (!emailInput.value && !usernameInput.value.trim()) {
+                alert('Please enter either a recipient email or username!');
+                emailInput.classList.add('shake');
+                usernameInput.classList.add('shake');
+                setTimeout(() => {
+                    emailInput.classList.remove('shake');
+                    usernameInput.classList.remove('shake');
+                }, 500);
+                triggerHaptic();
+                return;
+            }
+            if (emailInput.value && !emailInput.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+                alert('Please enter a valid email (e.g., example@gmail.com)!');
+                emailInput.classList.add('shake');
+                setTimeout(() => emailInput.classList.remove('shake'), 500);
+                triggerHaptic();
+                return;
+            }
+            if (usernameInput.value.trim() && !users[usernameInput.value.trim()]) {
+                alert('Recipient username does not exist!');
+                usernameInput.classList.add('shake');
+                setTimeout(() => usernameInput.classList.remove('shake'), 500);
+                triggerHaptic();
+                return;
+            }
+
+            showSpinner();
+            setTimeout(() => {
+                const code = Array(16).fill().map(() => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]).join('').match(/.{1,4}/g).join('-');
+                const pin = Math.floor(1000 + Math.random() * 9000);
+                const transactionId = 'TXN-' + Math.random().toString(36).substring(2, 11).toUpperCase();
+                const status = Math.random() > 0.2 ? 'Completed' : (Math.random() > 0.5 ? 'Pending' : 'Failed');
+
+                codeElement.textContent = code;
+                pinElement.textContent = pin;
+                codeElement.parentElement.classList.add('pulse');
+
+                const transaction = {
+                    brand: brand.charAt(0).toUpperCase() + brand.slice(1),
+                    name: nameInput.value,
+                    phone: phoneInput.value,
+                    email: emailInput.value || null,
+                    recipient_username: usernameInput.value.trim() || null,
+                    code,
+                    pin,
+                    transaction_id: transactionId,
+                    status
+                };
+
+                users[user].transactions.unshift(transaction);
+                if (users[user].transactions.length > 5) users[user].transactions.pop();
+                saveUsers(users);
+
+                if (emailInput.value) {
+                    alert(`Fake email sent to ${emailInput.value}:\nSubject: Your ${transaction.brand} Gift Card\n\nDear ${nameInput.value},\nYour gift card details:\n- Code: ${code}\n- PIN: ${pin}\n- Transaction ID: ${transactionId}\n\nRedeem on ${transaction.brand}. This is a demo!\n\nFXXXGIFTCARDZ Team`);
+                    showEmailConfirmation();
+                }
+                if (usernameInput.value.trim()) {
+                    const messages = getMessages();
+                    messages.push({
+                        from_username: user,
+                        to_username: usernameInput.value.trim(),
+                        brand: transaction.brand,
+                        code,
+                        pin,
+                        transaction_id: transactionId
+                    });
+                    saveMessages(messages);
+                    showMessageConfirmation();
+                }
+
+                alert(`Gift Card Details:\nBrand: ${transaction.brand}\nCode: ${code}\nPIN: ${pin}\nTransaction ID: ${transactionId}\n\nShare this with the recipient if needed.`);
+                showSuccessAnimation();
+                loadTransactionHistory();
+                setTimeout(() => codeElement.parentElement.classList.remove('pulse'), 1000);
+            }, 1000);
         }
 
-        showSpinner();
-        setTimeout(() => {
+        function checkNotifications() {
+            const user = sessionStorage.getItem('user');
+            const messages = getMessages();
+            const message = messages.find(msg => msg.to_username === user);
+            if (message) {
+                showNotification(`New Gift Card from ${message.from_username}!<br><strong>Brand:</strong> ${message.brand}<br><strong>Code:</strong> ${message.code}<br><strong>PIN:</strong> ${message.pin}<br><strong>Transaction ID:</strong> ${message.transaction_id}`);
+                saveMessages(messages.filter(msg => msg !== message));
+            }
+        }
+
+        function loadTransactionHistory() {
+            const user = sessionStorage.getItem('user');
+            const users = getUsers();
+            const historyElement = document.getElementById('transaction-history');
+            const transactions = users[user]?.transactions || [];
+            if (transactions.length) {
+                historyElement.innerHTML = transactions.map(tx => `
+                    <div class="bg-white p-6 rounded-lg mb-2 text-black slide-in shadow-md twirl">
+                        <p><strong>Transaction ID:</strong> ${tx.transaction_id}</p>
+                        <p><strong>Brand:</strong> ${tx.brand}</p>
+                        <p><strong>Name:</strong> ${tx.name}</p>
+                        <p><strong>Phone:</strong> ${tx.phone}</p>
+                        <p><strong>Email:</strong> ${tx.email || 'N/A'}</p>
+                        <p><strong>Recipient Username:</strong> ${tx.recipient_username || 'N/A'}</p>
+                        <p><strong>Code:</strong> ${tx.code}</p>
+                        <p><strong>PIN:</strong> ${tx.pin}</p>
+                        <p><strong>Status:</strong> ${tx.status}</p>
+                    </div>
+                `).join('');
+            } else {
+                historyElement.innerHTML = '<p class="text-yellow-200 slide-in">No transactions yet.</p>';
+            }
+        }
+
+        function checkTransaction() {
+            const transactionIdInput = document.getElementById('transaction-id-input').value.trim();
+            const statusElement = document.getElementById('transaction-status');
+            const user = sessionStorage.getItem('user');
+            const users = getUsers();
+            const transactions = users[user]?.transactions || [];
+
+            if (!transactionIdInput) {
+                statusElement.innerHTML = '<p class="text-red-400 slide-in">Please enter a Transaction ID!</p>';
+                statusElement.classList.add('shake');
+                setTimeout(() => statusElement.classList.remove('shake'), 500);
+                triggerHaptic();
+                return;
+            }
+
+            const transaction = transactions.find(tx => tx.transaction_id === transactionIdInput);
             if (transaction) {
                 statusElement.innerHTML = `
-                    <div class="bg-white text-black p-4 rounded-md fade-in">
-                        <p><strong>Transaction ID:</strong> ${transaction.transactionId}</p>
+                    <div class="bg-white p-6 rounded-lg slide-in text-black shadow-md twirl">
+                        <p><strong>Transaction ID:</strong> ${transaction.transaction_id}</p>
                         <p><strong>Brand:</strong> ${transaction.brand}</p>
                         <p><strong>Name:</strong> ${transaction.name}</p>
                         <p><strong>Phone:</strong> ${transaction.phone}</p>
                         <p><strong>Email:</strong> ${transaction.email || 'N/A'}</p>
-                        <p><strong>Recipient Username:</strong> ${transaction.recipientUsername || 'N/A'}</p>
+                        <p><strong>Recipient Username:</strong> ${transaction.recipient_username || 'N/A'}</p>
                         <p><strong>Code:</strong> ${transaction.code}</p>
                         <p><strong>PIN:</strong> ${transaction.pin}</p>
                         <p><strong>Status:</strong> ${transaction.status}</p>
                     </div>
                 `;
+                playSound('success-sound');
+                triggerHaptic();
             } else {
-                statusElement.innerHTML = '<p class="text-red-500 fade-in">No transaction found with this ID.</p>';
+                statusElement.innerHTML = `<p class="text-red-400 slide-in">No transaction found!</p>`;
+                statusElement.classList.add('shake');
+                setTimeout(() => statusElement.classList.remove('shake'), 500);
+                triggerHaptic();
             }
-        }, 1000);
-    }
+        }
 
-    // Initialize
-    if (currentUser) {
-        showMainContent();
-        loadTransactionHistory();
-    } else {
-        showAuthModal('login');
-    }
-              </script>
+        // Initialize
+        showWelcome();
+    </script>
+</body>
+</html>
