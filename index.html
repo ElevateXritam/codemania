@@ -128,6 +128,12 @@
             opacity: 0.2;
             z-index: -1;
         }
+        .icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center text-white font-sans">
@@ -137,7 +143,7 @@
     <audio id="welcome-sound" src="data:audio/mp3;base64,/+MYxAAAAANIAAAAAExBTUUzLjEwMC4yMKJodHRwOi8vd3d3LmZyZWVzb3VuZC5vcmcvc2FtcGxlcy9jaGltZXMubXAzAA==;"></audio>
     <audio id="success-sound" src="data:audio/mp3;base64,/+MYxAAAAANIAAAAAExBTUUzLjEwMC4yMKJodHRwOi8vd3d3LmZyZWVzb3VuZC5vcmcvc2FtcGxlcy9wb3AubXAzAA==;"></audio>
 
-    <!-- Welcome Popup -->
+    <!-- Welcome Popup with Password -->
     <div id="welcome-popup" class="overlay active">
         <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 rounded-2xl w-96 shadow-2xl zoom-in">
             <svg width="80" height="80" viewBox="0 0 100 100" class="spin mx-auto">
@@ -145,8 +151,10 @@
                 <path d="M50 30 A20 20 0 0 1 70 50 A20 20 0 0 1 50 70 A20 20 0 0 1 30 50 A20 20 0 0 1 50 30" fill="#facc15"/>
             </svg>
             <h2 class="text-3xl font-bold mb-4 text-center text-white pulse">Welcome to FXXXGIFTCARDZ!</h2>
-            <p class="text-lg mb-6 text-center text-yellow-200 float">Create and share fun gift cards!</p>
-            <button onclick="closeWelcome()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Get Started</button>
+            <p class="text-lg mb-6 text-center text-yellow-200 float">Enter the password to continue</p>
+            <p id="password-error" class="text-red-200 mb-4 text-center hidden"></p>
+            <input type="password" id="password-input" placeholder="Enter Password" class="mb-4 p-3 w-full rounded-lg text-black focus:ring-2 focus:ring-yellow-300 slide-in">
+            <button onclick="checkPassword()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Submit</button>
         </div>
     </div>
 
@@ -198,9 +206,19 @@
                         </svg>
                     </div>
                     <h3 class="text-2xl font-bold text-white">Flipkart Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
-                        <p>Code: <span id="flipkart-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p>PIN: <span id="flipkart-pin">XXXX</span></p>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
+                        <p>Code: <span id="flipkart-code">000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
+                        <p>PIN: <span id="flipkart-pin">000000</span></p>
                     </div>
                     <input type="text" id="flipkart-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
                     <input type="tel" id="flipkart-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
@@ -218,9 +236,19 @@
                         </svg>
                     </div>
                     <h3 class="text-2xl font-bold text-white">Amazon Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
-                        <p>Code: <span id="amazon-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p>PIN: <span id="amazon-pin">XXXX</span></p>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
+                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
+                        </svg>
+                        <p>Code: <span id="amazon-code">000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
+                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
+                        </svg>
+                        <p>PIN: <span id="amazon-pin">000000</span></p>
                     </div>
                     <input type="text" id="amazon-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
                     <input type="tel" id="amazon-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
@@ -238,9 +266,19 @@
                         </svg>
                     </div>
                     <h3 class="text-2xl font-bold text-white">Swiggy Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
-                        <p>Code: <span id="swiggy-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p>PIN: <span id="swiggy-pin">XXXX</span></p>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                        <p>Code: <span id="swiggy-code">000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                        <p>PIN: <span id="swiggy-pin">000000</span></p>
                     </div>
                     <input type="text" id="swiggy-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
                     <input type="tel" id="swiggy-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
@@ -258,9 +296,19 @@
                         </svg>
                     </div>
                     <h3 class="text-2xl font-bold text-white">Zomato Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
-                        <p>Code: <span id="zomato-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p>PIN: <span id="zomato-pin">XXXX</span></p>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
+                        <p>Code: <span id="zomato-code">000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
+                        <p>PIN: <span id="zomato-pin">000000</span></p>
                     </div>
                     <input type="text" id="zomato-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
                     <input type="tel" id="zomato-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
@@ -279,9 +327,21 @@
                         </svg>
                     </div>
                     <h3 class="text-2xl font-bold text-white">Domino's Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse">
-                        <p>Code: <span id="dominos-code">XXXX-XXXX-XXXX-XXXX</span></p>
-                        <p>PIN: <span id="dominos-pin">XXXX</span></p>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#0046be"/>
+                            <circle cx="40" cy="40" r="10" fill="white"/>
+                            <circle cx="60" cy="60" r="10" fill="white"/>
+                        </svg>
+                        <p>Code: <span id="dominos-code">000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#0046be"/>
+                            <circle cx="40" cy="40" r="10" fill="white"/>
+                            <circle cx="60" cy="60" r="10" fill="white"/>
+                        </svg>
+                        <p>PIN: <span id="dominos-pin">000000</span></p>
                     </div>
                     <input type="text" id="dominos-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
                     <input type="tel" id="dominos-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
@@ -355,25 +415,67 @@
 
         function triggerHaptic() {
             if (navigator.vibrate) {
-                navigator.vibrate([100, 50, 100]); // Short joyful vibration pattern
+                navigator.vibrate([100, 50, 100]);
+            }
+        }
+
+        // Password Check
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            const error = document.getElementById('password-error');
+            if (password === 'MAYUKHMCBCNIBBA') {
+                document.getElementById('welcome-popup').classList.remove('active');
+                showAuthModal('login');
+                playSound('success-sound');
+                triggerHaptic();
+            } else {
+                error.textContent = 'Incorrect password!';
+                error.classList.remove('hidden');
+                error.classList.add('shake');
+                setTimeout(() => error.classList.remove('shake'), 500);
+                triggerHaptic();
             }
         }
 
         // Local Storage Management
         function getUsers() {
-            return JSON.parse(localStorage.getItem('fxxx_users')) || {};
+            try {
+                const users = JSON.parse(localStorage.getItem('fxxx_users') || '{}');
+                console.log('Retrieved users:', users);
+                return users;
+            } catch (e) {
+                console.error('Error accessing localStorage (users):', e);
+                return {};
+            }
         }
 
         function saveUsers(users) {
-            localStorage.setItem('fxxx_users', JSON.stringify(users));
+            try {
+                localStorage.setItem('fxxx_users', JSON.stringify(users));
+                console.log('Saved users:', users);
+            } catch (e) {
+                console.error('Error saving to localStorage (users):', e);
+            }
         }
 
         function getMessages() {
-            return JSON.parse(localStorage.getItem('fxxx_messages')) || [];
+            try {
+                const messages = JSON.parse(localStorage.getItem('fxxx_messages') || '[]');
+                console.log('Retrieved messages:', messages);
+                return messages;
+            } catch (e) {
+                console.error('Error accessing localStorage (messages):', e);
+                return [];
+            }
         }
 
         function saveMessages(messages) {
-            localStorage.setItem('fxxx_messages', JSON.stringify(messages));
+            try {
+                localStorage.setItem('fxxx_messages', JSON.stringify(messages));
+                console.log('Saved messages:', messages);
+            } catch (e) {
+                console.error('Error saving to localStorage (messages):', e);
+            }
         }
 
         // UI Functions
@@ -382,12 +484,6 @@
             popup.classList.add('active');
             playSound('welcome-sound');
             triggerHaptic();
-        }
-
-        function closeWelcome() {
-            const popup = document.getElementById('welcome-popup');
-            popup.classList.remove('active');
-            showAuthModal('login');
         }
 
         function showAuthModal(mode) {
@@ -418,7 +514,7 @@
 
         // Authentication
         document.getElementById('auth-submit').addEventListener('click', () => {
-            const username = document.getElementById('auth-username').value.trim();
+            const username = document.getElementById('auth-username').value.trim().toLowerCase();
             const mode = document.getElementById('auth-title').textContent.toLowerCase();
             const error = document.getElementById('auth-error');
             const users = getUsers();
@@ -474,7 +570,7 @@
         document.getElementById('logout-btn').addEventListener('click', () => {
             sessionStorage.removeItem('user');
             document.getElementById('main-content').classList.add('hidden');
-            showAuthModal('login');
+            showWelcome();
             playSound('success-sound');
             triggerHaptic();
         });
@@ -573,7 +669,7 @@
                 triggerHaptic();
                 return;
             }
-            if (usernameInput.value.trim() && !users[usernameInput.value.trim()]) {
+            if (usernameInput.value.trim() && !users[usernameInput.value.trim().toLowerCase()]) {
                 alert('Recipient username does not exist!');
                 usernameInput.classList.add('shake');
                 setTimeout(() => usernameInput.classList.remove('shake'), 500);
@@ -583,8 +679,10 @@
 
             showSpinner();
             setTimeout(() => {
-                const code = Array(16).fill().map(() => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]).join('').match(/.{1,4}/g).join('-');
-                const pin = Math.floor(1000 + Math.random() * 9000);
+                // New Code: 12-digit numeric
+                const code = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+                // New PIN: 6-digit numeric
+                const pin = Math.floor(100000 + Math.random() * 900000).toString();
                 const transactionId = 'TXN-' + Math.random().toString(36).substring(2, 11).toUpperCase();
                 const status = Math.random() > 0.2 ? 'Completed' : (Math.random() > 0.5 ? 'Pending' : 'Failed');
 
@@ -597,7 +695,7 @@
                     name: nameInput.value,
                     phone: phoneInput.value,
                     email: emailInput.value || null,
-                    recipient_username: usernameInput.value.trim() || null,
+                    recipient_username: usernameInput.value.trim().toLowerCase() || null,
                     code,
                     pin,
                     transaction_id: transactionId,
@@ -616,7 +714,7 @@
                     const messages = getMessages();
                     messages.push({
                         from_username: user,
-                        to_username: usernameInput.value.trim(),
+                        to_username: usernameInput.value.trim().toLowerCase(),
                         brand: transaction.brand,
                         code,
                         pin,
@@ -711,4 +809,4 @@
         showWelcome();
     </script>
 </body>
-</html>
+    </html>
