@@ -158,19 +158,6 @@
         </div>
     </div>
 
-    <!-- Login/Signup Popup -->
-    <div id="auth-popup" class="overlay">
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 rounded-2xl w-96 shadow-2xl zoom-in">
-            <h2 id="auth-title" class="text-3xl font-bold mb-6 text-center text-white pulse">Login</h2>
-            <p id="auth-error" class="text-yellow-200 mb-4 text-center hidden"></p>
-            <input type="text" id="auth-username" placeholder="Username (e.g., example123)" class="mb-4 p-3 w-full rounded-lg text-black focus:ring-2 focus:ring-yellow-300 slide-in">
-            <div class="flex justify-between items-center">
-                <button id="auth-submit" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Login</button>
-                <button id="toggle-auth" class="text-yellow-200 hover:text-yellow-300 underline slide-in">Sign Up</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Notification Popup -->
     <div id="notify-popup" class="overlay">
         <div class="bg-gradient-to-r from-green-500 to-teal-500 p-8 rounded-2xl w-96 shadow-2xl zoom-in relative">
@@ -184,12 +171,11 @@
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content (Gift Card Portal) -->
     <div id="main-content" class="w-full max-w-5xl mx-auto p-6 hidden">
         <header class="text-center py-8">
             <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-pink-500 animate-pulse">FXXXGIFTCARDZ</h1>
             <p class="text-xl mt-3 text-yellow-200 float">Send Free Gift Cards with Joy!</p>
-            <button id="logout-btn" class="mt-6 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 shake">Logout</button>
         </header>
 
         <!-- Gift Card Section -->
@@ -425,7 +411,8 @@
             const error = document.getElementById('password-error');
             if (password === 'MAYUKHMCBCNIBBA') {
                 document.getElementById('welcome-popup').classList.remove('active');
-                showAuthModal('login');
+                document.getElementById('main-content').classList.remove('hidden');
+                document.querySelectorAll('.card, section').forEach(el => el.classList.add('slide-in'));
                 playSound('success-sound');
                 triggerHaptic();
             } else {
@@ -438,23 +425,23 @@
         }
 
         // Local Storage Management
-        function getUsers() {
+        function getTransactions() {
             try {
-                const users = JSON.parse(localStorage.getItem('fxxx_users') || '{}');
-                console.log('Retrieved users:', users);
-                return users;
+                const transactions = JSON.parse(localStorage.getItem('fxxx_transactions') || '[]');
+                console.log('Retrieved transactions:', transactions);
+                return transactions;
             } catch (e) {
-                console.error('Error accessing localStorage (users):', e);
-                return {};
+                console.error('Error accessing localStorage (transactions):', e);
+                return [];
             }
         }
 
-        function saveUsers(users) {
+        function saveTransactions(transactions) {
             try {
-                localStorage.setItem('fxxx_users', JSON.stringify(users));
-                console.log('Saved users:', users);
+                localStorage.setItem('fxxx_transactions', JSON.stringify(transactions));
+                console.log('Saved transactions:', transactions);
             } catch (e) {
-                console.error('Error saving to localStorage (users):', e);
+                console.error('Error saving to localStorage (transactions):', e);
             }
         }
 
@@ -486,94 +473,12 @@
             triggerHaptic();
         }
 
-        function showAuthModal(mode) {
-            const popup = document.getElementById('auth-popup');
-            popup.classList.add('active');
-            document.getElementById('auth-title').textContent = mode === 'login' ? 'Login' : 'Sign Up';
-            document.getElementById('auth-submit').textContent = mode === 'login' ? 'Login' : 'Sign Up';
-            document.getElementById('toggle-auth').textContent = mode === 'login' ? 'Sign Up' : 'Login';
-            document.getElementById('auth-error').classList.add('hidden');
-            popup.querySelector('div').classList.add('zoom-in');
-            triggerHaptic();
-        }
-
-        function hideAuthModal() {
-            const popup = document.getElementById('auth-popup');
-            popup.classList.remove('active');
-            document.getElementById('auth-username').value = '';
-            document.getElementById('auth-error').classList.add('hidden');
-            popup.querySelector('div').classList.remove('zoom-in');
-        }
-
         function showMainContent() {
             document.getElementById('main-content').classList.remove('hidden');
             document.querySelectorAll('.card, section').forEach(el => el.classList.add('slide-in'));
             checkNotifications();
             loadTransactionHistory();
         }
-
-        // Authentication
-        document.getElementById('auth-submit').addEventListener('click', () => {
-            const username = document.getElementById('auth-username').value.trim().toLowerCase();
-            const mode = document.getElementById('auth-title').textContent.toLowerCase();
-            const error = document.getElementById('auth-error');
-            const users = getUsers();
-
-            if (!username) {
-                error.textContent = 'Please enter a username!';
-                error.classList.remove('hidden');
-                error.classList.add('shake');
-                setTimeout(() => error.classList.remove('shake'), 500);
-                triggerHaptic();
-                return;
-            }
-
-            if (mode === 'signup') {
-                if (users[username]) {
-                    error.textContent = 'Username already taken!';
-                    error.classList.remove('hidden');
-                    error.classList.add('shake');
-                    setTimeout(() => error.classList.remove('shake'), 500);
-                    triggerHaptic();
-                    return;
-                }
-                users[username] = { transactions: [] };
-                saveUsers(users);
-                sessionStorage.setItem('user', username);
-                hideAuthModal();
-                showMainContent();
-                playSound('success-sound');
-                triggerHaptic();
-            } else {
-                if (!users[username]) {
-                    error.textContent = 'Username not found!';
-                    error.classList.remove('hidden');
-                    error.classList.add('shake');
-                    setTimeout(() => error.classList.remove('shake'), 500);
-                    triggerHaptic();
-                    return;
-                }
-                sessionStorage.setItem('user', username);
-                hideAuthModal();
-                showMainContent();
-                playSound('success-sound');
-                triggerHaptic();
-            }
-        });
-
-        document.getElementById('toggle-auth').addEventListener('click', () => {
-            const mode = document.getElementById('auth-title').textContent.toLowerCase();
-            showAuthModal(mode === 'login' ? 'signup' : 'login');
-            triggerHaptic();
-        });
-
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            sessionStorage.removeItem('user');
-            document.getElementById('main-content').classList.add('hidden');
-            showWelcome();
-            playSound('success-sound');
-            triggerHaptic();
-        });
 
         // Animations
         function showSuccessAnimation() {
@@ -634,8 +539,7 @@
             const usernameInput = document.getElementById(`${brand}-username`);
             const codeElement = document.getElementById(`${brand}-code`);
             const pinElement = document.getElementById(`${brand}-pin`);
-            const user = sessionStorage.getItem('user');
-            const users = getUsers();
+            const transactions = getTransactions();
 
             if (!nameInput.value.trim()) {
                 alert('Please enter your name!');
@@ -669,19 +573,21 @@
                 triggerHaptic();
                 return;
             }
-            if (usernameInput.value.trim() && !users[usernameInput.value.trim().toLowerCase()]) {
-                alert('Recipient username does not exist!');
-                usernameInput.classList.add('shake');
-                setTimeout(() => usernameInput.classList.remove('shake'), 500);
-                triggerHaptic();
-                return;
+            if (usernameInput.value.trim()) {
+                const messages = getMessages();
+                const existingMessage = messages.find(msg => msg.to_username === usernameInput.value.trim().toLowerCase() && msg.code === codeElement.textContent);
+                if (existingMessage) {
+                    alert('This gift card is already sent to the username!');
+                    usernameInput.classList.add('shake');
+                    setTimeout(() => usernameInput.classList.remove('shake'), 500);
+                    triggerHaptic();
+                    return;
+                }
             }
 
             showSpinner();
             setTimeout(() => {
-                // New Code: 12-digit numeric
                 const code = Math.floor(100000000000 + Math.random() * 900000000000).toString();
-                // New PIN: 6-digit numeric
                 const pin = Math.floor(100000 + Math.random() * 900000).toString();
                 const transactionId = 'TXN-' + Math.random().toString(36).substring(2, 11).toUpperCase();
                 const status = Math.random() > 0.2 ? 'Completed' : (Math.random() > 0.5 ? 'Pending' : 'Failed');
@@ -702,9 +608,9 @@
                     status
                 };
 
-                users[user].transactions.unshift(transaction);
-                if (users[user].transactions.length > 5) users[user].transactions.pop();
-                saveUsers(users);
+                transactions.unshift(transaction);
+                if (transactions.length > 5) transactions.pop();
+                saveTransactions(transactions);
 
                 if (emailInput.value) {
                     alert(`Fake email sent to ${emailInput.value}:\nSubject: Your ${transaction.brand} Gift Card\n\nDear ${nameInput.value},\nYour gift card details:\n- Code: ${code}\n- PIN: ${pin}\n- Transaction ID: ${transactionId}\n\nRedeem on ${transaction.brand}. This is a demo!\n\nFXXXGIFTCARDZ Team`);
@@ -713,7 +619,7 @@
                 if (usernameInput.value.trim()) {
                     const messages = getMessages();
                     messages.push({
-                        from_username: user,
+                        from_username: 'anonymous',
                         to_username: usernameInput.value.trim().toLowerCase(),
                         brand: transaction.brand,
                         code,
@@ -732,20 +638,17 @@
         }
 
         function checkNotifications() {
-            const user = sessionStorage.getItem('user');
             const messages = getMessages();
-            const message = messages.find(msg => msg.to_username === user);
+            const message = messages.find(msg => msg.to_username === 'anonymous' || !msg.to_username);
             if (message) {
-                showNotification(`New Gift Card from ${message.from_username}!<br><strong>Brand:</strong> ${message.brand}<br><strong>Code:</strong> ${message.code}<br><strong>PIN:</strong> ${message.pin}<br><strong>Transaction ID:</strong> ${message.transaction_id}`);
+                showNotification(`New Gift Card from anonymous!<br><strong>Brand:</strong> ${message.brand}<br><strong>Code:</strong> ${message.code}<br><strong>PIN:</strong> ${message.pin}<br><strong>Transaction ID:</strong> ${message.transaction_id}`);
                 saveMessages(messages.filter(msg => msg !== message));
             }
         }
 
         function loadTransactionHistory() {
-            const user = sessionStorage.getItem('user');
-            const users = getUsers();
+            const transactions = getTransactions();
             const historyElement = document.getElementById('transaction-history');
-            const transactions = users[user]?.transactions || [];
             if (transactions.length) {
                 historyElement.innerHTML = transactions.map(tx => `
                     <div class="bg-white p-6 rounded-lg mb-2 text-black slide-in shadow-md twirl">
@@ -768,9 +671,7 @@
         function checkTransaction() {
             const transactionIdInput = document.getElementById('transaction-id-input').value.trim();
             const statusElement = document.getElementById('transaction-status');
-            const user = sessionStorage.getItem('user');
-            const users = getUsers();
-            const transactions = users[user]?.transactions || [];
+            const transactions = getTransactions();
 
             if (!transactionIdInput) {
                 statusElement.innerHTML = '<p class="text-red-400 slide-in">Please enter a Transaction ID!</p>';
@@ -809,4 +710,4 @@
         showWelcome();
     </script>
 </body>
-    </html>
+</html>
