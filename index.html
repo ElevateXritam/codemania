@@ -197,7 +197,7 @@
                             <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
                             <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
                         </svg>
-                        <p>Code: <span id="flipkart-code">000000000000</span></p>
+                        <p>Code: <span id="flipkart-code">0000000000000000</span></p>
                     </div>
                     <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
                         <svg class="icon" viewBox="0 0 100 100">
@@ -227,7 +227,7 @@
                             <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
                             <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
                         </svg>
-                        <p>Code: <span id="amazon-code">000000000000</span></p>
+                        <p>Code: <span id="amazon-code">0000000000000000</span></p>
                     </div>
                     <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
                         <svg class="icon" viewBox="0 0 100 100">
@@ -257,7 +257,7 @@
                             <circle cx="50" cy="50" r="30" fill="#fc8019"/>
                             <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
                         </svg>
-                        <p>Code: <span id="swiggy-code">000000000000</span></p>
+                        <p>Code: <span id="swiggy-code">0000000000000000</span></p>
                     </div>
                     <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
                         <svg class="icon" viewBox="0 0 100 100">
@@ -287,7 +287,7 @@
                             <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
                             <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
                         </svg>
-                        <p>Code: <span id="zomato-code">000000000000</span></p>
+                        <p>Code: <span id="zomato-code">0000000000000000</span></p>
                     </div>
                     <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
                         <svg class="icon" viewBox="0 0 100 100">
@@ -319,7 +319,7 @@
                             <circle cx="40" cy="40" r="10" fill="white"/>
                             <circle cx="60" cy="60" r="10" fill="white"/>
                         </svg>
-                        <p>Code: <span id="dominos-code">000000000000</span></p>
+                        <p>Code: <span id="dominos-code">0000000000000000</span></p>
                     </div>
                     <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
                         <svg class="icon" viewBox="0 0 100 100">
@@ -351,7 +351,7 @@
                 <input type="text" id="transaction-id-input" placeholder="Enter Transaction ID" class="p-3 rounded-lg text-black flex-1 slide-in">
                 <button onclick="checkTransaction()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Check</button>
             </div>
-            <div id="transaction-status" class="mt-6 text-xl text-white"></div>
+            <div id="transaction-status" class="mt-6 text-xl text-white hidden"></div>
         </section>
 
         <!-- Success Popup -->
@@ -384,6 +384,18 @@
                     <path d="M35 50 L45 60 L65 40" stroke="#fff" stroke-width="6"/>
                 </svg>
                 <p class="text-2xl mt-3 text-white pulse">Gift Card Sent to Username!</p>
+            </div>
+        </div>
+
+        <!-- Limit Popup -->
+        <div id="limit-popup" class="overlay">
+            <div class="bg-gradient-to-r from-red-600 to-red-800 p-8 rounded-2xl w-96 shadow-2xl zoom-in text-center">
+                <svg width="80" height="80" viewBox="0 0 100 100" class="spin mx-auto">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#f87171" stroke-width="6"/>
+                    <path d="M30 30 L70 70 M70 30 L30 70" stroke="#f87171" stroke-width="6"/>
+                </svg>
+                <p class="text-2xl mt-3 text-white pulse">kire bokachoda tor limit Khatam hogaya</p>
+                <button onclick="closeLimitPopup()" class="mt-6 bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">OK</button>
             </div>
         </div>
     </div>
@@ -531,6 +543,20 @@
             }, 1000);
         }
 
+        function showLimitPopup() {
+            const overlay = document.getElementById('limit-popup');
+            overlay.classList.add('active');
+            playSound('success-sound');
+            triggerHaptic();
+            setTimeout(() => overlay.classList.remove('active'), 3000);
+        }
+
+        function closeLimitPopup() {
+            const overlay = document.getElementById('limit-popup');
+            overlay.classList.remove('active');
+            triggerHaptic();
+        }
+
         // Gift Card Logic
         function generateCard(brand) {
             const nameInput = document.getElementById(`${brand}-name`);
@@ -587,7 +613,7 @@
 
             showSpinner();
             setTimeout(() => {
-                const code = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+                const code = Math.floor(1000000000000000 + Math.random() * 9000000000000000).toString();
                 const pin = Math.floor(100000 + Math.random() * 900000).toString();
                 const transactionId = 'TXN-' + Math.random().toString(36).substring(2, 11).toUpperCase();
                 const status = Math.random() > 0.2 ? 'Completed' : (Math.random() > 0.5 ? 'Pending' : 'Failed');
@@ -669,45 +695,11 @@
         }
 
         function checkTransaction() {
-            const transactionIdInput = document.getElementById('transaction-id-input').value.trim();
-            const statusElement = document.getElementById('transaction-status');
-            const transactions = getTransactions();
-
-            if (!transactionIdInput) {
-                statusElement.innerHTML = '<p class="text-red-400 slide-in">Please enter a Transaction ID!</p>';
-                statusElement.classList.add('shake');
-                setTimeout(() => statusElement.classList.remove('shake'), 500);
-                triggerHaptic();
-                return;
-            }
-
-            const transaction = transactions.find(tx => tx.transaction_id === transactionIdInput);
-            if (transaction) {
-                statusElement.innerHTML = `
-                    <div class="bg-white p-6 rounded-lg slide-in text-black shadow-md twirl">
-                        <p><strong>Transaction ID:</strong> ${transaction.transaction_id}</p>
-                        <p><strong>Brand:</strong> ${transaction.brand}</p>
-                        <p><strong>Name:</strong> ${transaction.name}</p>
-                        <p><strong>Phone:</strong> ${transaction.phone}</p>
-                        <p><strong>Email:</strong> ${transaction.email || 'N/A'}</p>
-                        <p><strong>Recipient Username:</strong> ${transaction.recipient_username || 'N/A'}</p>
-                        <p><strong>Code:</strong> ${transaction.code}</p>
-                        <p><strong>PIN:</strong> ${transaction.pin}</p>
-                        <p><strong>Status:</strong> ${transaction.status}</p>
-                    </div>
-                `;
-                playSound('success-sound');
-                triggerHaptic();
-            } else {
-                statusElement.innerHTML = `<p class="text-red-400 slide-in">No transaction found!</p>`;
-                statusElement.classList.add('shake');
-                setTimeout(() => statusElement.classList.remove('shake'), 500);
-                triggerHaptic();
-            }
+            showLimitPopup();
         }
 
         // Initialize
         showWelcome();
     </script>
 </body>
-</html>
+                        </html>
