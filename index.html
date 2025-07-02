@@ -171,33 +171,11 @@
         </div>
     </div>
 
-    <!-- NH-87 Password Popup -->
-    <div id="nh87-password-popup" class="overlay">
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 rounded-2xl w-96 shadow-2xl zoom-in">
-            <h2 class="text-3xl font-bold mb-4 text-center text-white pulse">NH-87 Access</h2>
-            <p class="text-lg mb-6 text-center text-yellow-200 float">Enter the password to access</p>
-            <p id="nh87-password-error" class="text-red-200 mb-4 text-center hidden"></p>
-            <input type="password" id="nh87-password-input" placeholder="Enter Password" class="mb-4 p-3 w-full rounded-lg text-black focus:ring-2 focus:ring-yellow-300 slide-in">
-            <button onclick="checkNH87Password()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Submit</button>
-        </div>
-    </div>
-
-    <!-- RD-87 Password Popup -->
-    <div id="rd87-password-popup" class="overlay">
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 rounded-2xl w-96 shadow-2xl zoom-in">
-            <h2 class="text-3xl font-bold mb-4 text-center text-white pulse">RD-87 Access</h2>
-            <p class="text-lg mb-6 text-center text-yellow-200 float">Enter the password to access</p>
-            <p id="rd87-password-error" class="text-red-200 mb-4 text-center hidden"></p>
-            <input type="password" id="rd87-password-input" placeholder="Enter Password" class="mb-4 p-3 w-full rounded-lg text-black focus:ring-2 focus:ring-yellow-300 slide-in">
-            <button onclick="checkRD87Password()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Submit</button>
-        </div>
-    </div>
-
     <!-- Main Content (Gift Card Portal) -->
     <div id="main-content" class="w-full max-w-5xl mx-auto p-6 hidden">
         <header class="text-center py-8">
             <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-pink-500 animate-pulse">FXXXGIFTCARDZ</h1>
-            <p class="text-xl mt-3 text-yellow-200 float">Send Free Gift Cards with Joy!</p>
+            <p id="login-id" class="text-xl mt-3 text-yellow-200 float">Logged in as: N/A</p>
         </header>
 
         <!-- Gift Card Section -->
@@ -271,7 +249,7 @@
         </section>
 
         <!-- NH-87 Section -->
-        <section id="nh87-section" class="mb-12 hidden">
+        <section id="nh87-section" class="mb-12">
             <h2 class="text-3xl font-bold mb-6 text-center text-yellow-200 slide-in">NH-87 VIP Gift Cards</h2>
             <div id="nh87-spinner" class="spinner hidden"></div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -368,7 +346,7 @@
         </section>
 
         <!-- RD-87 Section -->
-        <section id="rd87-section" class="mb-12 hidden">
+        <section id="rd87-section" class="mb-12">
             <h2 class="text-3xl font-bold mb-6 text-center text-yellow-200 slide-in">RD-87 VIP Gift Cards</h2>
             <div id="rd87-spinner" class="spinner hidden"></div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -531,52 +509,36 @@
             }
         }
 
-        // Password Checks
+        // Password Check
         function checkPassword() {
             const password = document.getElementById('password-input').value;
             const error = document.getElementById('password-error');
-            if (password === 'MAYUKHMCBCNIBBA') {
-                document.getElementById('welcome-popup').classList.remove('active');
-                document.getElementById('main-content').classList.remove('hidden');
+            const mainContent = document.getElementById('main-content');
+            const nh87Section = document.getElementById('nh87-section');
+            const rd87Section = document.getElementById('rd87-section');
+            const loginId = document.getElementById('login-id');
+
+            if (password === 'MAYUKHMCBCNIBBA' || password === 'NILADRIHALDER' || password === 'RITAMDAS') {
+                mainContent.classList.remove('hidden');
                 document.querySelectorAll('.card, section').forEach(el => el.classList.add('slide-in'));
                 playSound('success-sound');
                 triggerHaptic();
-            } else {
-                error.textContent = 'Incorrect password!';
-                error.classList.remove('hidden');
-                error.classList.add('shake');
-                setTimeout(() => error.classList.remove('shake'), 500);
-                triggerHaptic();
-            }
-        }
 
-        function checkNH87Password() {
-            const password = document.getElementById('nh87-password-input').value;
-            const error = document.getElementById('nh87-password-error');
-            if (password === 'NILADRIHALDER') {
-                document.getElementById('nh87-password-popup').classList.remove('active');
-                document.getElementById('nh87-section').classList.remove('hidden');
-                document.querySelectorAll('#nh87-section .card').forEach(el => el.classList.add('slide-in'));
-                playSound('success-sound');
-                triggerHaptic();
-            } else {
-                error.textContent = 'Incorrect password!';
-                error.classList.remove('hidden');
-                error.classList.add('shake');
-                setTimeout(() => error.classList.remove('shake'), 500);
-                triggerHaptic();
-            }
-        }
+                // Update login ID in header
+                loginId.textContent = `Logged in as: ${password}`;
 
-        function checkRD87Password() {
-            const password = document.getElementById('rd87-password-input').value;
-            const error = document.getElementById('rd87-password-error');
-            if (password === 'RITAMDAS') {
-                document.getElementById('rd87-password-popup').classList.remove('active');
-                document.getElementById('rd87-section').classList.remove('hidden');
-                document.querySelectorAll('#rd87-section .card').forEach(el => el.classList.add('slide-in'));
-                playSound('success-sound');
-                triggerHaptic();
+                // Show sections based on password
+                if (password === 'MAYUKHMCBCNIBBA') {
+                    nh87Section.style.display = 'block';
+                    rd87Section.style.display = 'block';
+                } else if (password === 'NILADRIHALDER') {
+                    nh87Section.style.display = 'block';
+                    rd87Section.style.display = 'none';
+                } else if (password === 'RITAMDAS') {
+                    nh87Section.style.display = 'none';
+                    rd87Section.style.display = 'block';
+                }
+                document.getElementById('welcome-popup').classList.remove('active');
             } else {
                 error.textContent = 'Incorrect password!';
                 error.classList.remove('hidden');
@@ -633,27 +595,6 @@
             popup.classList.add('active');
             playSound('welcome-sound');
             triggerHaptic();
-        }
-
-        function showNH87PasswordPopup() {
-            const popup = document.getElementById('nh87-password-popup');
-            popup.classList.add('active');
-            playSound('welcome-sound');
-            triggerHaptic();
-        }
-
-        function showRD87PasswordPopup() {
-            const popup = document.getElementById('rd87-password-popup');
-            popup.classList.add('active');
-            playSound('welcome-sound');
-            triggerHaptic();
-        }
-
-        function showMainContent() {
-            document.getElementById('main-content').classList.remove('hidden');
-            document.querySelectorAll('.card, section').forEach(el => el.classList.add('slide-in'));
-            checkNotifications();
-            loadTransactionHistory();
         }
 
         // Animations
@@ -884,9 +825,7 @@
         }
 
         // Initialize
-        document.getElementById('nh87-section').addEventListener('click', showNH87PasswordPopup);
-        document.getElementById('rd87-section').addEventListener('click', showRD87PasswordPopup);
         showWelcome();
     </script>
 </body>
-                </html>
+    </html>
