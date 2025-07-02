@@ -171,6 +171,28 @@
         </div>
     </div>
 
+    <!-- NH-87 Password Popup -->
+    <div id="nh87-password-popup" class="overlay">
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 rounded-2xl w-96 shadow-2xl zoom-in">
+            <h2 class="text-3xl font-bold mb-4 text-center text-white pulse">NH-87 Access</h2>
+            <p class="text-lg mb-6 text-center text-yellow-200 float">Enter the password to access</p>
+            <p id="nh87-password-error" class="text-red-200 mb-4 text-center hidden"></p>
+            <input type="password" id="nh87-password-input" placeholder="Enter Password" class="mb-4 p-3 w-full rounded-lg text-black focus:ring-2 focus:ring-yellow-300 slide-in">
+            <button onclick="checkNH87Password()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Submit</button>
+        </div>
+    </div>
+
+    <!-- RD-87 Password Popup -->
+    <div id="rd87-password-popup" class="overlay">
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-8 rounded-2xl w-96 shadow-2xl zoom-in">
+            <h2 class="text-3xl font-bold mb-4 text-center text-white pulse">RD-87 Access</h2>
+            <p class="text-lg mb-6 text-center text-yellow-200 float">Enter the password to access</p>
+            <p id="rd87-password-error" class="text-red-200 mb-4 text-center hidden"></p>
+            <input type="password" id="rd87-password-input" placeholder="Enter Password" class="mb-4 p-3 w-full rounded-lg text-black focus:ring-2 focus:ring-yellow-300 slide-in">
+            <button onclick="checkRD87Password()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Submit</button>
+        </div>
+    </div>
+
     <!-- Main Content (Gift Card Portal) -->
     <div id="main-content" class="w-full max-w-5xl mx-auto p-6 hidden">
         <header class="text-center py-8">
@@ -183,126 +205,6 @@
             <h2 class="text-3xl font-bold mb-6 text-center text-yellow-200 slide-in">Choose a Gift Card</h2>
             <div id="spinner" class="spinner hidden"></div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Flipkart -->
-                <div class="card bg-gradient-to-br from-orange-400 to-orange-600 p-6 rounded-xl shadow-lg glow twirl">
-                    <div class="logo bg-white">
-                        <svg width="50" height="50" viewBox="0 0 100 100">
-                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white">Flipkart Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
-                        <svg class="icon" viewBox="0 0 100 100">
-                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
-                        </svg>
-                        <p>Code: <span id="flipkart-code">0000000000000000</span></p>
-                    </div>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
-                        <svg class="icon" viewBox="0 0 100 100">
-                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
-                        </svg>
-                        <p>PIN: <span id="flipkart-pin">000000</span></p>
-                    </div>
-                    <input type="text" id="flipkart-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
-                    <input type="tel" id="flipkart-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
-                    <input type="email" id="flipkart-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
-                    <input type="text" id="flipkart-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
-                    <button onclick="generateCard('flipkart')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
-                </div>
-
-                <!-- Amazon -->
-                <div class="card bg-gradient-to-br from-yellow-300 to-yellow-500 p-6 rounded-xl shadow-lg glow twirl">
-                    <div class="logo bg-white">
-                        <svg width="50" height="50" viewBox="0 0 100 100">
-                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
-                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white">Amazon Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
-                        <svg class="icon" viewBox="0 0 100 100">
-                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
-                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
-                        </svg>
-                        <p>Code: <span id="amazon-code">0000000000000000</span></p>
-                    </div>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
-                        <svg class="icon" viewBox="0 0 100 100">
-                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
-                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
-                        </svg>
-                        <p>PIN: <span id="amazon-pin">000000</span></p>
-                    </div>
-                    <input type="text" id="amazon-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
-                    <input type="tel" id="amazon-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
-                    <input type="email" id="amazon-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
-                    <input type="text" id="amazon-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
-                    <button onclick="generateCard('amazon')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
-                </div>
-
-                <!-- Swiggy -->
-                <div class="card bg-gradient-to-br from-orange-500 to-red-500 p-6 rounded-xl shadow-lg glow twirl">
-                    <div class="logo bg-white">
-                        <svg width="50" height="50" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white">Swiggy Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
-                        <svg class="icon" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
-                        </svg>
-                        <p>Code: <span id="swiggy-code">0000000000000000</span></p>
-                    </div>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
-                        <svg class="icon" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
-                        </svg>
-                        <p>PIN: <span id="swiggy-pin">000000</span></p>
-                    </div>
-                    <input type="text" id="swiggy-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
-                    <input type="tel" id="swiggy-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
-                    <input type="email" id="swiggy-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
-                    <input type="text" id="swiggy-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
-                    <button onclick="generateCard('swiggy')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
-                </div>
-
-                <!-- Zomato -->
-                <div class="card bg-gradient-to-br from-red-400 to-red-600 p-6 rounded-xl shadow-lg glow twirl">
-                    <div class="logo bg-white">
-                        <svg width="50" height="50" viewBox="0 0 100 100">
-                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white">Zomato Gift Card</h3>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
-                        <svg class="icon" viewBox="0 0 100 100">
-                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
-                        </svg>
-                        <p>Code: <span id="zomato-code">0000000000000000</span></p>
-                    </div>
-                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
-                        <svg class="icon" viewBox="0 0 100 100">
-                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
-                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
-                        </svg>
-                        <p>PIN: <span id="zomato-pin">000000</span></p>
-                    </div>
-                    <input type="text" id="zomato-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
-                    <input type="tel" id="zomato-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
-                    <input type="email" id="zomato-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
-                    <input type="text" id="zomato-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
-                    <button onclick="generateCard('zomato')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
-                </div>
-
                 <!-- Domino's -->
                 <div class="card bg-gradient-to-br from-blue-500 to-blue-700 p-6 rounded-xl shadow-lg glow twirl">
                     <div class="logo bg-white">
@@ -335,6 +237,230 @@
                     <input type="text" id="dominos-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
                     <button onclick="generateCard('dominos')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
                 </div>
+
+                <!-- Amazon -->
+                <div class="card bg-gradient-to-br from-yellow-300 to-yellow-500 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
+                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Amazon Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
+                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
+                        </svg>
+                        <p>Code: <span id="amazon-code">0000000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <path d="M20 70 Q50 20 80 70" fill="none" stroke="#ff9900" stroke-width="10"/>
+                            <text x="50" y="60" font-size="20" fill="black" text-anchor="middle">A</text>
+                        </svg>
+                        <p>PIN: <span id="amazon-pin">000000</span></p>
+                    </div>
+                    <input type="text" id="amazon-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="amazon-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="amazon-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="amazon-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('amazon')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- NH-87 Section -->
+        <section id="nh87-section" class="mb-12 hidden">
+            <h2 class="text-3xl font-bold mb-6 text-center text-yellow-200 slide-in">NH-87 VIP Gift Cards</h2>
+            <div id="nh87-spinner" class="spinner hidden"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Zomato -->
+                <div class="card bg-gradient-to-br from-red-400 to-red-600 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Zomato Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
+                        <p>Code: <span id="nh87-zomato-code">0000000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
+                        <p>PIN: <span id="nh87-zomato-pin">000000</span></p>
+                    </div>
+                    <input type="text" id="nh87-zomato-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="nh87-zomato-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="nh87-zomato-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="nh87-zomato-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('nh87-zomato')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
+                </div>
+
+                <!-- Swiggy -->
+                <div class="card bg-gradient-to-br from-orange-500 to-red-500 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Swiggy Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                        <p>Code: <span id="nh87-swiggy-code">0000000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                        <p>PIN: <span id="nh87-swiggy-pin">000000</span></p>
+                    </div>
+                    <input type="text" id="nh87-swiggy-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="nh87-swiggy-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="nh87-swiggy-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="nh87-swiggy-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('nh87-swiggy')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
+                </div>
+
+                <!-- Flipkart -->
+                <div class="card bg-gradient-to-br from-orange-400 to-orange-600 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Flipkart Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
+                        <p>Code: <span id="nh87-flipkart-code">0000000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
+                        <p>PIN: <span id="nh87-flipkart-pin">000000</span></p>
+                    </div>
+                    <input type="text" id="nh87-flipkart-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="nh87-flipkart-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="nh87-flipkart-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="nh87-flipkart-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('nh87-flipkart')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RD-87 Section -->
+        <section id="rd87-section" class="mb-12 hidden">
+            <h2 class="text-3xl font-bold mb-6 text-center text-yellow-200 slide-in">RD-87 VIP Gift Cards</h2>
+            <div id="rd87-spinner" class="spinner hidden"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Zomato -->
+                <div class="card bg-gradient-to-br from-red-400 to-red-600 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Zomato Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
+                        <p>Code: <span id="rd87-zomato-code">0000000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#cb202d"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">Z</text>
+                        </svg>
+                        <p>PIN: <span id="rd87-zomato-pin">000000</span></p>
+                    </div>
+                    <input type="text" id="rd87-zomato-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="rd87-zomato-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="rd87-zomato-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="rd87-zomato-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('rd87-zomato')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
+                </div>
+
+                <!-- Swiggy -->
+                <div class="card bg-gradient-to-br from-orange-500 to-red-500 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Swiggy Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                        <p>Code: <span id="rd87-swiggy-code">0000000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="30" fill="#fc8019"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">S</text>
+                        </svg>
+                        <p>PIN: <span id="rd87-swiggy-pin">000000</span></p>
+                    </div>
+                    <input type="text" id="rd87-swiggy-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="rd87-swiggy-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="rd87-swiggy-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="rd87-swiggy-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('rd87-swiggy')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
+                </div>
+
+                <!-- Flipkart -->
+                <div class="card bg-gradient-to-br from-orange-400 to-orange-600 p-6 rounded-xl shadow-lg glow twirl">
+                    <div class="logo bg-white">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Flipkart Gift Card</h3>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
+                        <p>Code: <span id="rd87-flipkart-code">0000000000000000</span></p>
+                    </div>
+                    <div class="bg-white text-black p-3 rounded-lg mt-3 pulse flex items-center">
+                        <svg class="icon" viewBox="0 0 100 100">
+                            <rect x="20" y="20" width="60" height="60" fill="#2874f0"/>
+                            <text x="50" y="60" font-size="20" fill="white" text-anchor="middle">F</text>
+                        </svg>
+                        <p>PIN: <span id="rd87-flipkart-pin">000000</span></p>
+                    </div>
+                    <input type="text" id="rd87-flipkart-name" placeholder="Your Name" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="tel" id="rd87-flipkart-phone" placeholder="Phone Number" class="mt-3 p-3 w-full rounded-lg text-black slide-in" required>
+                    <input type="email" id="rd87-flipkart-email" placeholder="Recipient Email (optional)" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <input type="text" id="rd87-flipkart-username" placeholder="Recipient Username" class="mt-3 p-3 w-full rounded-lg text-black slide-in">
+                    <button onclick="generateCard('rd87-flipkart')" class="mt-3 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 bounce">Generate & Send</button>
+                </div>
             </div>
         </section>
 
@@ -351,7 +477,7 @@
                 <input type="text" id="transaction-id-input" placeholder="Enter Transaction ID" class="p-3 rounded-lg text-black flex-1 slide-in">
                 <button onclick="checkTransaction()" class="bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">Check</button>
             </div>
-            <div id="transaction-status" class="mt-6 text-xl text-white hidden"></div>
+            <div id="transaction-status" class="mt-6 text-xl text-white"></div>
         </section>
 
         <!-- Success Popup -->
@@ -386,18 +512,6 @@
                 <p class="text-2xl mt-3 text-white pulse">Gift Card Sent to Username!</p>
             </div>
         </div>
-
-        <!-- Limit Popup -->
-        <div id="limit-popup" class="overlay">
-            <div class="bg-gradient-to-r from-red-600 to-red-800 p-8 rounded-2xl w-96 shadow-2xl zoom-in text-center">
-                <svg width="80" height="80" viewBox="0 0 100 100" class="spin mx-auto">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#f87171" stroke-width="6"/>
-                    <path d="M30 30 L70 70 M70 30 L30 70" stroke="#f87171" stroke-width="6"/>
-                </svg>
-                <p class="text-2xl mt-3 text-white pulse">kire bokachoda tor limit Khatam hogaya</p>
-                <button onclick="closeLimitPopup()" class="mt-6 bg-yellow-400 text-black px-6 py-3 rounded-lg hover:bg-yellow-500 bounce">OK</button>
-            </div>
-        </div>
     </div>
 
     <footer class="py-6 text-center">
@@ -417,7 +531,7 @@
             }
         }
 
-        // Password Check
+        // Password Checks
         function checkPassword() {
             const password = document.getElementById('password-input').value;
             const error = document.getElementById('password-error');
@@ -425,6 +539,42 @@
                 document.getElementById('welcome-popup').classList.remove('active');
                 document.getElementById('main-content').classList.remove('hidden');
                 document.querySelectorAll('.card, section').forEach(el => el.classList.add('slide-in'));
+                playSound('success-sound');
+                triggerHaptic();
+            } else {
+                error.textContent = 'Incorrect password!';
+                error.classList.remove('hidden');
+                error.classList.add('shake');
+                setTimeout(() => error.classList.remove('shake'), 500);
+                triggerHaptic();
+            }
+        }
+
+        function checkNH87Password() {
+            const password = document.getElementById('nh87-password-input').value;
+            const error = document.getElementById('nh87-password-error');
+            if (password === 'NILADRIHALDER') {
+                document.getElementById('nh87-password-popup').classList.remove('active');
+                document.getElementById('nh87-section').classList.remove('hidden');
+                document.querySelectorAll('#nh87-section .card').forEach(el => el.classList.add('slide-in'));
+                playSound('success-sound');
+                triggerHaptic();
+            } else {
+                error.textContent = 'Incorrect password!';
+                error.classList.remove('hidden');
+                error.classList.add('shake');
+                setTimeout(() => error.classList.remove('shake'), 500);
+                triggerHaptic();
+            }
+        }
+
+        function checkRD87Password() {
+            const password = document.getElementById('rd87-password-input').value;
+            const error = document.getElementById('rd87-password-error');
+            if (password === 'RITAMDAS') {
+                document.getElementById('rd87-password-popup').classList.remove('active');
+                document.getElementById('rd87-section').classList.remove('hidden');
+                document.querySelectorAll('#rd87-section .card').forEach(el => el.classList.add('slide-in'));
                 playSound('success-sound');
                 triggerHaptic();
             } else {
@@ -485,6 +635,20 @@
             triggerHaptic();
         }
 
+        function showNH87PasswordPopup() {
+            const popup = document.getElementById('nh87-password-popup');
+            popup.classList.add('active');
+            playSound('welcome-sound');
+            triggerHaptic();
+        }
+
+        function showRD87PasswordPopup() {
+            const popup = document.getElementById('rd87-password-popup');
+            popup.classList.add('active');
+            playSound('welcome-sound');
+            triggerHaptic();
+        }
+
         function showMainContent() {
             document.getElementById('main-content').classList.remove('hidden');
             document.querySelectorAll('.card, section').forEach(el => el.classList.add('slide-in'));
@@ -533,8 +697,8 @@
             triggerHaptic();
         }
 
-        function showSpinner() {
-            const spinner = document.getElementById('spinner');
+        function showSpinner(section) {
+            const spinner = document.getElementById(`${section}-spinner`);
             spinner.classList.remove('hidden');
             spinner.classList.add('spin');
             setTimeout(() => {
@@ -543,22 +707,9 @@
             }, 1000);
         }
 
-        function showLimitPopup() {
-            const overlay = document.getElementById('limit-popup');
-            overlay.classList.add('active');
-            playSound('success-sound');
-            triggerHaptic();
-            setTimeout(() => overlay.classList.remove('active'), 3000);
-        }
-
-        function closeLimitPopup() {
-            const overlay = document.getElementById('limit-popup');
-            overlay.classList.remove('active');
-            triggerHaptic();
-        }
-
         // Gift Card Logic
         function generateCard(brand) {
+            const [section, brandName] = brand.split('-');
             const nameInput = document.getElementById(`${brand}-name`);
             const phoneInput = document.getElementById(`${brand}-phone`);
             const emailInput = document.getElementById(`${brand}-email`);
@@ -611,7 +762,7 @@
                 }
             }
 
-            showSpinner();
+            showSpinner(section);
             setTimeout(() => {
                 const code = Math.floor(1000000000000000 + Math.random() * 9000000000000000).toString();
                 const pin = Math.floor(100000 + Math.random() * 900000).toString();
@@ -623,7 +774,7 @@
                 codeElement.parentElement.classList.add('pulse');
 
                 const transaction = {
-                    brand: brand.charAt(0).toUpperCase() + brand.slice(1),
+                    brand: brandName.charAt(0).toUpperCase() + brandName.slice(1),
                     name: nameInput.value,
                     phone: phoneInput.value,
                     email: emailInput.value || null,
@@ -695,11 +846,47 @@
         }
 
         function checkTransaction() {
-            showLimitPopup();
+            const transactionIdInput = document.getElementById('transaction-id-input').value.trim();
+            const statusElement = document.getElementById('transaction-status');
+            const transactions = getTransactions();
+
+            if (!transactionIdInput) {
+                statusElement.innerHTML = '<p class="text-red-400 slide-in">Please enter a Transaction ID!</p>';
+                statusElement.classList.add('shake');
+                setTimeout(() => statusElement.classList.remove('shake'), 500);
+                triggerHaptic();
+                return;
+            }
+
+            const transaction = transactions.find(tx => tx.transaction_id === transactionIdInput);
+            if (transaction) {
+                statusElement.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg slide-in text-black shadow-md twirl">
+                        <p><strong>Transaction ID:</strong> ${transaction.transaction_id}</p>
+                        <p><strong>Brand:</strong> ${transaction.brand}</p>
+                        <p><strong>Name:</strong> ${transaction.name}</p>
+                        <p><strong>Phone:</strong> ${transaction.phone}</p>
+                        <p><strong>Email:</strong> ${transaction.email || 'N/A'}</p>
+                        <p><strong>Recipient Username:</strong> ${transaction.recipient_username || 'N/A'}</p>
+                        <p><strong>Code:</strong> ${transaction.code}</p>
+                        <p><strong>PIN:</strong> ${transaction.pin}</p>
+                        <p><strong>Status:</strong> ${transaction.status}</p>
+                    </div>
+                `;
+                playSound('success-sound');
+                triggerHaptic();
+            } else {
+                statusElement.innerHTML = `<p class="text-red-400 slide-in">No transaction found!</p>`;
+                statusElement.classList.add('shake');
+                setTimeout(() => statusElement.classList.remove('shake'), 500);
+                triggerHaptic();
+            }
         }
 
         // Initialize
+        document.getElementById('nh87-section').addEventListener('click', showNH87PasswordPopup);
+        document.getElementById('rd87-section').addEventListener('click', showRD87PasswordPopup);
         showWelcome();
     </script>
 </body>
-                        </html>
+                </html>
